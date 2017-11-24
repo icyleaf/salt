@@ -2,26 +2,76 @@ require "http/server"
 
 module Salt
   class Server
-    property host : String
-    property port : Int32
     property logger : ::Logger
+    property options : Hash(String, String|Int32|Bool)
 
-    def initialize(host : String? = nil, port : Int32? = nil)
-      @host = host || "0.0.0.0"
-      @port = port || 9876
+    @run : App?
+    @app : App?
+    @wrapped_app : App?
 
+    def initialize(**options)
+      @options = parse_options **options
       @logger = ::Logger.new(STDOUT)
     end
 
     def run(run : Salt::App)
-      display_info
+      @run = run
+      if @options["debug"].as(Bool)
+        pp @options
+        pp run
+      end
 
-      app = Salt::Middlewares.to_app(run)
-      HTTP::Server.new(@host, @port, [Salt::Middlewares::Core.new(app)]).listen
+      display_info
+      HTTP::Server.new(@options["host"].as(String), @options["port"].as(Int32), [
+        Salt::Middlewares::Core.new(wrapped_app)
+      ]).listen
+    end
+
+    def app
+      @app ||= Salt::Middlewares.to_app(run)
+    end
+
+    def wrapped_app
+      @wrapped_app ||= build_app(app)
+    end
+
+    def run
+      @run.not_nil!
+    end
+
+    # @middlewares = {} of String => Array(Salt::App.class)
+    private def middlewares
+      {
+        "development" => [
+          Salt::Middlewares::CommonLogger,
+        ],
+        "deployment" => [
+          Salt::Middlewares::CommonLogger,
+        ]
+      }
+    end
+
+    private def build_app(app)
+      middlewares[options["environment"]].reverse_each do |klass|
+        app = klass.new(app)
+      end
+      app
+    end
+
+    private def parse_options(**options)
+      Hash(String, String|Int32|Bool).new.tap do |obj|
+        obj["environment"] = options.fetch(:environment, ENV["SALT_ENV"]? || "development")
+        obj["host"] = options.fetch(:host, obj["environment"].to_s == "development" ? "localhost" : "0.0.0.0")
+        obj["port"] = options.fetch(:port, 9876)
+
+        obj["debug"] = options.fetch(:debug, false)
+
+        ENV["SALT_ENV"] = obj["environment"].to_s
+      end
     end
 
     private def display_info
-      @logger.info "HTTP::Server is start at http://#{host}:#{port}/"
+      @logger.info "HTTP::Server is start at http://#{@options["host"]}:#{@options["port"]}/"
       @logger.info "Use Ctrl-C to stop"
     end
   end
