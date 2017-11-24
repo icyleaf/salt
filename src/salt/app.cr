@@ -15,6 +15,8 @@ module Salt
 
     protected def call_app(context)
       if app = @app
+        puts "#{self.class} is call #{app.class}"
+
         response = app.call(context)
         @status_code = response[0].as(Int32)
         @headers = response[1].as(Hash(String, String))

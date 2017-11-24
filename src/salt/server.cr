@@ -1,4 +1,5 @@
 require "http/server"
+require "./ext/*"
 
 module Salt
   class Server
@@ -44,6 +45,7 @@ module Salt
       {
         "development" => [
           Salt::Middlewares::CommonLogger,
+          Salt::Middlewares::ShowExceptions,
         ],
         "deployment" => [
           Salt::Middlewares::CommonLogger,
@@ -52,7 +54,7 @@ module Salt
     end
 
     private def build_app(app)
-      middlewares[options["environment"]].reverse_each do |klass|
+      middlewares[options["environment"]].each do |klass|
         app = klass.new(app)
       end
       app

@@ -1,5 +1,5 @@
 module Salt::Middlewares
-  class Runtime < App
+  class Runtime < Salt::App
     HEADER_NAME = "X-Runtime"
 
     def initialize(@app : App, name : String? = nil)

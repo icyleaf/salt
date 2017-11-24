@@ -1,7 +1,7 @@
 require "colorize"
 
 module Salt::Middlewares
-  class CommonLogger < App
+  class CommonLogger < Salt::App
     FORMAT = %{%s |%s| %12s |%s %s%s}
 
     def initialize(@app : App, io : IO = STDERR)

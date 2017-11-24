@@ -15,10 +15,6 @@ module Salt
       @@middlewares.reverse.reduce(run) { |a, e| e.call(a) }
     end
 
-    def self.each(&block)
-      @@middlewares.each &block
-    end
-
     def self.clear
       @@middlewares.clear
     end
