@@ -12,44 +12,47 @@ module Salt
       @logger = Logger.new(STDOUT)
     end
 
-    def run(run : Salt::App)
-      @run = run
+    def run(run_app : Salt::App)
+      @run_app = run_app
       display_info
+      run_server
+    end
+
+    def wrapped_app
+      @wrapped_app ||= build_app(app).as(Salt::App)
+    end
+
+    def app
+      @app ||= Salt::Middlewares.to_app(run_app).as(Salt::App)
+    end
+
+    def run_app
+      @run_app.not_nil!
+    end
+
+    private def run_server
       HTTP::Server.new(@options["host"].as(String), @options["port"].as(Int32), [
         Salt::Middlewares::Core.new(wrapped_app)
       ]).listen(reuse_port: false)
     end
 
-    def wrapped_app
-      @wrapped_app ||= build_app(app).as(App)
-    end
-
-    def app
-      @app ||= Salt::Middlewares.to_app(run).as(App)
-    end
-
-    def run
-      @run.not_nil!
-    end
-
-    # @middlewares = {} of String => Array(Salt::App.class)
-    private def middlewares
-      {
-        "development" => [
-          Salt::Middlewares::CommonLogger,
-          Salt::Middlewares::ShowExceptions,
-        ],
-        "deployment" => [
-          Salt::Middlewares::CommonLogger,
-        ]
-      }
-    end
-
-    private def build_app(app : App)
+    private def build_app(app : Salt::App)
       middlewares[options["environment"]].each do |klass|
         app = klass.new(app)
       end
       app
+    end
+
+    private def middlewares
+      @middlewares ||= {
+        "development" => [
+          Salt::Middlewares::CommonLogger.as(Salt::App.class),
+          Salt::Middlewares::ShowExceptions.as(Salt::App.class),
+        ],
+        "deployment" => [
+          Salt::Middlewares::CommonLogger.as(Salt::App.class),
+        ]
+      }.as(Hash(String, Array(Salt::App.class)))
     end
 
     private def parse_options(**options)
@@ -57,7 +60,6 @@ module Salt
         obj["environment"] = options.fetch(:environment, ENV["SALT_ENV"]? || "development")
         obj["host"] = options.fetch(:host, obj["environment"].to_s == "development" ? "localhost" : "0.0.0.0")
         obj["port"] = options.fetch(:port, 9898)
-
         obj["debug"] = options.fetch(:debug, false)
 
         ENV["SALT_ENV"] = obj["environment"].to_s

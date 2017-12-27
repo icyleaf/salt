@@ -2,7 +2,7 @@
 
 > **atention**: This is a early-stage project.
 
-a modular Crystal webserver interface.
+A easy use Crystal modular webserver interface for Humans. Inspired from Ruby's [rack](https://github.com/rack/rack) gem.
 
 ## Installation
 

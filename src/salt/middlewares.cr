@@ -1,10 +1,6 @@
 module Salt
   module Middlewares
     @@middlewares = [] of Proc(Salt::App, Salt::App)
-    # @@middlewares = {
-    #   "development" => [] of Proc(Salt::App, Salt::App),
-    #   "deployment" => [] of Proc(Salt::App, Salt::App)
-    # }
 
     def self.use(middleware, *args)
       proc = ->(app : Salt::App) { middleware.new(app, *args).as(Salt::App) }
