@@ -7,16 +7,23 @@ module Salt::Middlewares
       @header_name += "-#{name}" unless name.to_s.empty?
     end
 
-    def call(context)
-      start_time = Time.now
-      call_app(context)
-      request_time = Time.now - start_time
+    def call(env)
+      elapsed = elapsed do
+        call_app(env)
+      end
 
       unless headers.has_key?(@header_name)
-        headers[@header_name] = request_time.to_f.round(6).to_s
+        headers[@header_name] = elapsed
       end
 
       [status_code, headers, body]
+    end
+
+    private def elapsed(&block)
+      start_time = Time.now
+      block.call
+      elapsed = Time.now - start_time
+      elapsed.to_f.round(6).to_s
     end
   end
 end

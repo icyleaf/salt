@@ -9,24 +9,22 @@ module Salt::Middlewares
       setting_logger
     end
 
-    def call(context)
+    def call(env)
       began_at = Time.now
-      call_app(context)
-      log(context, status_code, headers, began_at)
+      call_app(env)
+      log(env, status_code, headers, began_at)
 
       [status_code, headers, body]
     end
 
-    private def log(context, status_code, headers, began_at)
-      request = context.request
-
+    private def log(env, status_code, headers, began_at)
       @logger.info FORMAT % [
         Time.now.to_s("%Y/%m/%d - %H:%m:%S"),
         colorful_status_code(status_code),
         elapsed_from(began_at),
-        colorful_method(request.method),
-        request.path,
-        request.query ? "?#{request.query}" : "",
+        colorful_method(env.method),
+        env.path,
+        env.query ? "?#{env.query}" : "",
       ]
     end
 
@@ -51,13 +49,11 @@ module Salt::Middlewares
       when "GET"
         raw.colorize.fore(:white).back(:blue)
       when "POST"
-        raw.colorize.fore(:white).back(:cyan)
-      when "PUT"
+        raw.colorize.fore(:white).back(:green)
+      when "PUT", "PATCH"
         raw.colorize.fore(:white).back(:yellow)
       when "DELETE"
         raw.colorize.fore(:white).back(:red)
-      when "PATCH"
-        raw.colorize.fore(:white).back(:green)
       when "HEAD"
         raw.colorize.fore(:white).back(:magenta)
       else
@@ -76,13 +72,6 @@ module Salt::Middlewares
       else
         "#{(millis * 1000 * 1000).round(4)}ns"
       end
-      # raw
-
-      # diff = ELAPSED_LENGTH - raw.size
-      # "%s%s " % [
-      #   " " * diff,
-      #   raw
-      # ]
     end
 
     private def setting_logger

@@ -2,14 +2,14 @@ require "ecr/macros"
 
 module Salt::Middlewares
   class ShowExceptions < Salt::App
-    def call(context)
-        call_app(context)
+    def call(env)
+        call_app(env)
 
         [status_code, headers, body]
       rescue e : Exception
         puts dump_exception(e)
 
-        body = pretty_body(context, e)
+        body = pretty_body(env, e)
         [
           500,
           {
@@ -27,9 +27,7 @@ module Salt::Middlewares
       end.to_s
     end
 
-    private def pretty_body(context, exception) : String
-      request = context.request
-
+    private def pretty_body(env, exception) : String
       io = IO::Memory.new
       ECR.embed "#{__DIR__}/show_exceptions/views/layout.ecr", io
 

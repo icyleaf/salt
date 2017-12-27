@@ -22,7 +22,9 @@ module Salt
       end
 
       def call(context)
-        response = @app.call(context)
+        env = Environment.new(context)
+        response = @app.call(env)
+
         status_code = response[0].as(Int32)
         headers = response[1].as(Hash(String, String))
         body = response[2].as(Array(String))
