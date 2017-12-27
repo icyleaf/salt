@@ -62,16 +62,17 @@ module Salt::Middlewares
     end
 
     ELAPSED_LENGTH = 14
+
     private def elapsed_from(began_time)
       elapsed = Time.now - began_time
       millis = elapsed.total_milliseconds
-      raw = if millis >=1
-        "#{millis.round(4)}ms"
-      elsif (millis * 1000) >= 1
-        "#{(millis * 1000).round(4)}µs"
-      else
-        "#{(millis * 1000 * 1000).round(4)}ns"
-      end
+      raw = if millis >= 1
+              "#{millis.round(4)}ms"
+            elsif (millis * 1000) >= 1
+              "#{(millis * 1000).round(4)}µs"
+            else
+              "#{(millis * 1000 * 1000).round(4)}ns"
+            end
     end
 
     private def setting_logger

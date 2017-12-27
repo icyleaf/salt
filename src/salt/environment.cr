@@ -77,7 +77,7 @@ module Salt
       {% for method in %w(GET HEAD PUT POST PATCH DELETE OPTIONS) %}
         # Checks the HTTP request method (or verb) to see if it was of type {{ method.id }}
         def {{ method.id.downcase }}?
-          method == {{ method.id.stringify}}
+          method == {{ method.id.stringify }}
         end
       {% end %}
     end
@@ -87,16 +87,21 @@ module Salt
 
       @params_parsed = false
       @params = HTTP::Params.new
+
       def params
         return @params if @params_parsed && @request == @context.request
 
         @params_parsed = true
-        @params = case @request.headers["content_type"]
-                  when .includes?("multipart/form-data")
-                    parse_multipart(@request)
-                  else
-                    parse_body(@request.body)
-                  end
+        if content_type = @request.headers["content_type"]?
+          @params = case content_type
+                    when .includes?("multipart/form-data")
+                      parse_multipart(@request)
+                    else
+                      parse_body(@request.body)
+                    end
+        end
+
+        @params
       end
 
       @files = {} of String => HTTP::FormData::Part
@@ -137,8 +142,13 @@ module Salt
       end
     end
 
+    module Cookies
+      delegate cookies, to: @request
+    end
+
     include URI
     include Methods
     include Params
+    include Cookies
   end
 end

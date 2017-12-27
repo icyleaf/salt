@@ -192,7 +192,26 @@
   <% end %>
 
   <h3 id="cookie-info">COOKIES</h3>
-  <p>TBD.</p>
+  <% if !env.cookies.empty? %>
+    <table class="req">
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% env.cookies.each { |cookie| %>
+          <tr>
+            <td><%= cookie.name %></td>
+            <td class="code"><div><%= cookie.value %></div></td>
+          </tr>
+          <% } %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No Cookies data.</p>
+  <% end %>
 </div>
 
 <div id="explanation">

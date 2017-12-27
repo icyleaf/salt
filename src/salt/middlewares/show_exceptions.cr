@@ -3,21 +3,21 @@ require "ecr/macros"
 module Salt::Middlewares
   class ShowExceptions < Salt::App
     def call(env)
-        call_app(env)
+      call_app(env)
 
-        [status_code, headers, body]
-      rescue e : Exception
-        puts dump_exception(e)
+      [status_code, headers, body]
+    rescue e : Exception
+      puts dump_exception(e)
 
-        body = pretty_body(env, e)
-        [
-          500,
-          {
-            "Content-Type" => "text/html",
-            "Content-Length" => body.bytesize.to_s,
-          },
-          [body],
-        ]
+      body = pretty_body(env, e)
+      [
+        500,
+        {
+          "Content-Type"   => "text/html",
+          "Content-Length" => body.bytesize.to_s,
+        },
+        [body],
+      ]
     end
 
     private def dump_exception(exception)

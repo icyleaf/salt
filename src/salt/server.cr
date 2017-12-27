@@ -5,7 +5,7 @@ require "./ext/*"
 module Salt
   class Server
     property logger : Logger
-    property options : Hash(String, String|Int32|Bool)
+    property options : Hash(String, String | Int32 | Bool)
 
     def initialize(**options)
       @options = parse_options **options
@@ -32,7 +32,7 @@ module Salt
 
     private def run_server
       HTTP::Server.new(@options["host"].as(String), @options["port"].as(Int32), [
-        Salt::Middlewares::Core.new(wrapped_app)
+        Salt::Middlewares::Core.new(wrapped_app),
       ]).listen(reuse_port: false)
     end
 
@@ -51,12 +51,12 @@ module Salt
         ],
         "deployment" => [
           Salt::Middlewares::CommonLogger.as(Salt::App.class),
-        ]
+        ],
       }.as(Hash(String, Array(Salt::App.class)))
     end
 
     private def parse_options(**options)
-      Hash(String, String|Int32|Bool).new.tap do |obj|
+      Hash(String, String | Int32 | Bool).new.tap do |obj|
         obj["environment"] = options.fetch(:environment, ENV["SALT_ENV"]? || "development")
         obj["host"] = options.fetch(:host, obj["environment"].to_s == "development" ? "localhost" : "0.0.0.0")
         obj["port"] = options.fetch(:port, 9898)
