@@ -1,39 +1,31 @@
 require "http/server"
+require "logger"
 require "./ext/*"
 
 module Salt
   class Server
-    property logger : ::Logger
+    property logger : Logger
     property options : Hash(String, String|Int32|Bool)
-
-    @run : App?
-    @app : App?
-    @wrapped_app : App?
 
     def initialize(**options)
       @options = parse_options **options
-      @logger = ::Logger.new(STDOUT)
+      @logger = Logger.new(STDOUT)
     end
 
     def run(run : Salt::App)
       @run = run
-      if @options["debug"].as(Bool)
-        pp @options
-        pp run
-      end
-
       display_info
       HTTP::Server.new(@options["host"].as(String), @options["port"].as(Int32), [
         Salt::Middlewares::Core.new(wrapped_app)
-      ]).listen
-    end
-
-    def app
-      @app ||= Salt::Middlewares.to_app(run)
+      ]).listen(reuse_port: false)
     end
 
     def wrapped_app
-      @wrapped_app ||= build_app(app)
+      @wrapped_app ||= build_app(app).as(App)
+    end
+
+    def app
+      @app ||= Salt::Middlewares.to_app(run).as(App)
     end
 
     def run
@@ -53,7 +45,7 @@ module Salt
       }
     end
 
-    private def build_app(app)
+    private def build_app(app : App)
       middlewares[options["environment"]].each do |klass|
         app = klass.new(app)
       end
@@ -64,7 +56,7 @@ module Salt
       Hash(String, String|Int32|Bool).new.tap do |obj|
         obj["environment"] = options.fetch(:environment, ENV["SALT_ENV"]? || "development")
         obj["host"] = options.fetch(:host, obj["environment"].to_s == "development" ? "localhost" : "0.0.0.0")
-        obj["port"] = options.fetch(:port, 9876)
+        obj["port"] = options.fetch(:port, 9898)
 
         obj["debug"] = options.fetch(:debug, false)
 
