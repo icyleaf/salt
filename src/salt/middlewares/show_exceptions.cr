@@ -23,7 +23,7 @@ module Salt::Middlewares
     private def dump_exception(exception)
       String.build do |io|
         io << "#{exception.class}: #{exception.message}\n"
-        io << exception.backtrace.map { |l| "\t#{l}" }.join("\n")
+        io << exception.backtrace.map { |l| "    #{l}" }.join("\n")
       end.to_s
     end
 

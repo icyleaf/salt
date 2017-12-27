@@ -148,7 +148,7 @@
   <h2>Request information</h2>
 
   <h3 id="get-info">GET</h3>
-  <% if env.method == "GET" && !env.query_params.empty? %>
+  <% if !env.query_params.empty? %>
     <table class="req">
       <thead>
         <tr>
@@ -170,7 +170,26 @@
   <% end %>
 
   <h3 id="post-info">POST</h3>
-  <p>TBD.</p>
+  <% if !env.params.empty? %>
+    <table class="req">
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% env.params.each { |key, value| %>
+          <tr>
+            <td><%= key %></td>
+            <td class="code"><div><%= value.to_s %></div></td>
+          </tr>
+          <% } %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No POST data.</p>
+  <% end %>
 
   <h3 id="cookie-info">COOKIES</h3>
   <p>TBD.</p>
