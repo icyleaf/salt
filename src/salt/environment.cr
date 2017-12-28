@@ -2,13 +2,21 @@ require "uri"
 
 module Salt
   class Environment
-    property logger : Logger
-
     @request : HTTP::Request
 
     def initialize(@context : HTTP::Server::Context)
       @request = @context.request
-      @logger = ::Logger.new(STDOUT)
+    end
+
+    setter logger : ::Logger?
+
+    # Depend on `Salt::Middlewares::Logger` middleware
+    def logger
+      if @logger.nil?
+        raise Salt::Exceptions::NotFoundMiddleware.new("Missing `Salt.use Salt::Middlewares::Logger` before Salt::run.")
+      end
+
+      @logger.not_nil!
     end
 
     delegate version, to: @request
