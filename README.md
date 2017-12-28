@@ -23,21 +23,21 @@ dependencies:
 require "salt"
 
 class Talk < Salt::App
-  def call(context)
+  def call(env)
     [400, { "Content-Type" => "text/plain" }, ["Can I talk to salt?"]]
   end
 end
 
 class Shout < Salt::App
-  def call(context)
-    call_app(context)
+  def call(env)
+    call_app(env)
     [status_code, headers, body.map &.upcase ]
   end
 end
 
 class Speaking < Salt::App
-  def call(context)
-    call_app(context)
+  def call(env)
+    call_app(env)
     [200, { "Content-Type" => "text/plain" }, ["This is Slat speaking!"]]
   end
 end
@@ -61,3 +61,8 @@ Salt.run Talk.new
 ## Contributors
 
 - [icyleaf](https://github.com/icyleaf) - creator, maintainer
+
+
+## Thanks
+
+Icons made [Creaticca Creative Agency](https://www.flaticon.com/authors/creaticca-creative-agency) from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
