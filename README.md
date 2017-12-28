@@ -2,7 +2,10 @@
 
 > **atention**: This is a early-stage project.
 
-A easy use Crystal modular webserver interface for Humans. Inspired from Ruby's [rack](https://github.com/rack/rack) gem.
+![Language](https://img.shields.io/badge/language-crystal-black.svg)
+[![License](https://img.shields.io/github/license/icyleaf/salt.svg)](https://github.com/icyleaf/salt/blob/master/LICENSE)
+
+A easy use Crystal modular webserver interface for Humans. Inspired from Ruby's [rack](https://github.com/rack/rack) gem.
 
 ## Installation
 
