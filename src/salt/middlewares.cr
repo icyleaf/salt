@@ -2,12 +2,12 @@ module Salt
   module Middlewares
     @@middlewares = [] of Proc(Salt::App, Salt::App)
 
-    def self.use(middleware, *args)
-      proc = ->(app : Salt::App) { middleware.new(app, *args).as(Salt::App) }
+    def self.use(middleware_class, *args)
+      proc = ->(app : Salt::App) { middleware_class.new(app, *args).as(Salt::App) }
       @@middlewares << proc
     end
 
-    def self.to_app(run : Salt::App)
+    def self.to_app(run : Salt::App) : Salt::App
       @@middlewares.reverse.reduce(run) { |a, e| e.call(a) }
     end
 

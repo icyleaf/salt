@@ -45,14 +45,15 @@ module Salt
       Salt::Server::Handler.new(wrapped_app)
     end
 
-    private def build_app(app : Salt::App)
-      middlewares[options["environment"]].each do |klass|
+    private def build_app(app : Salt::App) : Salt::App
+      default_middlewares[options["environment"]].each do |klass|
         app = klass.new(app)
       end
+
       app
     end
 
-    private def middlewares
+    private def default_middlewares
       @middlewares ||= {
         "development" => [
           Salt::Middlewares::CommonLogger.as(Salt::App.class),
