@@ -2,6 +2,9 @@ require "http/server"
 require "logger"
 require "./ext/*"
 
+Signal::INT.trap { puts "\nCaught Ctrl+C and Goodbye."; exit }
+Signal::TERM.trap { puts "Caught kill"; exit }
+
 module Salt
   class Server
     property logger : ::Logger
