@@ -5,17 +5,13 @@ module Salt
   #
   # ```
   # class App < Salt::App
-  #   def call(context)
+  #   def call(env)
   #     [200, {"Content-Type" => "text/plain"}, ["hello world"]]
   #   end
   # end
   #
-  # Salt.run App.new, port: 9876
+  # Salt.run App.new
   # ```
-  # def self.run(app : Salt::App, host : String? = nil, port : Int32? = nil)
-  #   Salt::Server.new(host: host, port: port).run(app)
-  # end
-
   def self.run(app : Salt::App, **options)
     Salt::Server.new(**options).run(app)
   end
@@ -24,8 +20,8 @@ module Salt
   #
   # ```
   # class Middleware < Salt::App
-  #   def call(context)
-  #     call_app context
+  #   def call(env)
+  #     call_app(env)
   #     [200, {"Content-Type" => "text/html"}, ["<h1>", "Hello Salt", "</h1>"]]
   #   end
   # end
