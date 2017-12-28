@@ -1,4 +1,6 @@
 module Salt::Middlewares
+  # Sets an "X-Runtime" response header, indicating the response
+  # time of the request, in seconds
   class Runtime < Salt::App
     HEADER_NAME = "X-Runtime"
 

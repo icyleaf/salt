@@ -1,6 +1,7 @@
 require "colorize"
 
 module Salt::Middlewares
+  # Salt::Middlewares::CommonLogger forwards every request to the given app.
   class CommonLogger < Salt::App
     FORMAT = %{%s |%s| %12s |%s %s%s}
 
