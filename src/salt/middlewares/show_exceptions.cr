@@ -29,7 +29,7 @@ module Salt::Middlewares
 
     private def pretty_body(env, exception) : String
       io = IO::Memory.new
-      ECR.embed "#{__DIR__}/show_exceptions/views/layout.ecr", io
+      ECR.embed "#{__DIR__}/views/show_exceptions/layout.ecr", io
 
       io.to_s
     end
