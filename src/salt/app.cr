@@ -20,6 +20,8 @@ module Salt
         @headers = response[1].as(Hash(String, String))
         @body = response[2].as(Array(String))
       end
+
+      [@status_code, @headers, @body]
     end
   end
 end

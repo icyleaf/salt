@@ -4,12 +4,12 @@ require "./ext/*"
 
 module Salt
   class Server
-    property logger : Logger
+    property logger : ::Logger
     property options : Hash(String, String | Int32 | Bool)
 
     def initialize(**options)
       @options = parse_options **options
-      @logger = Logger.new(STDOUT)
+      @logger = ::Logger.new(STDOUT)
     end
 
     def run(run_app : Salt::App)

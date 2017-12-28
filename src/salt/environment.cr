@@ -2,14 +2,17 @@ require "uri"
 
 module Salt
   class Environment
-    delegate version, to: @request
-    delegate headers, to: @request
+    property logger : Logger
 
     @request : HTTP::Request
 
     def initialize(@context : HTTP::Server::Context)
       @request = @context.request
+      @logger = ::Logger.new(STDOUT)
     end
+
+    delegate version, to: @request
+    delegate headers, to: @request
 
     module URI
       delegate path, to: @request
