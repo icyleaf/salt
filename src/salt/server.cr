@@ -31,9 +31,15 @@ module Salt
     end
 
     private def run_server
-      HTTP::Server.new(@options["host"].as(String), @options["port"].as(Int32), [
-        Salt::Middlewares::Core.new(wrapped_app),
-      ]).listen(reuse_port: false)
+      HTTP::Server.new(
+        @options["host"].as(String),
+        @options["port"].as(Int32),
+        [handler]
+      ).listen(reuse_port: false)
+    end
+
+    private def handler
+      Salt::Server::Handler.new(wrapped_app)
     end
 
     private def build_app(app : Salt::App)
@@ -69,6 +75,32 @@ module Salt
     private def display_info
       @logger.info "HTTP::Server is start at http://#{@options["host"]}:#{@options["port"]}/"
       @logger.info "Use Ctrl-C to stop"
+    end
+
+    # Tranform Middlwares to HTTP::Handler
+    class Handler
+      include HTTP::Handler
+
+      def initialize(@app : Salt::App)
+      end
+
+      def call(context)
+        env = Salt::Environment.new(context)
+        response = @app.call(env)
+
+        status_code = response[0].as(Int32)
+        headers = response[1].as(Hash(String, String))
+        body = response[2].as(Array(String))
+
+        context.response.status_code = status_code
+        headers.each do |name, value|
+          context.response.headers[name] = value
+        end
+
+        body.each do |line|
+          context.response << line
+        end
+      end
     end
   end
 end

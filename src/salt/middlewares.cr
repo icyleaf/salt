@@ -14,31 +14,6 @@ module Salt
     def self.clear
       @@middlewares.clear
     end
-
-    class Core
-      include HTTP::Handler
-
-      def initialize(@app : Salt::App)
-      end
-
-      def call(context)
-        env = Environment.new(context)
-        response = @app.call(env)
-
-        status_code = response[0].as(Int32)
-        headers = response[1].as(Hash(String, String))
-        body = response[2].as(Array(String))
-
-        context.response.status_code = status_code
-        headers.each do |name, value|
-          context.response.headers[name] = value
-        end
-
-        body.each do |line|
-          context.response << line
-        end
-      end
-    end
   end
 end
 
