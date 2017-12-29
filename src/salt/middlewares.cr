@@ -2,8 +2,8 @@ module Salt
   module Middlewares
     @@middlewares = [] of Proc(Salt::App, Salt::App)
 
-    def self.use(middleware_class, *args)
-      proc = ->(app : Salt::App) { middleware_class.new(app, *args).as(Salt::App) }
+    def self.use(middleware_class, **options)
+      proc = ->(app : Salt::App) { middleware_class.new(app, **options).as(Salt::App) }
       @@middlewares << proc
     end
 
@@ -17,4 +17,4 @@ module Salt
   end
 end
 
-require "./middlewares/*"
+require "./middlewares/**"

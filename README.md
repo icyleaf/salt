@@ -42,7 +42,7 @@ class Speaking < Salt::App
   end
 end
 
-Salt.use Salt::Middlewares::Runtime, "Talk"
+Salt.use Salt::Middlewares::Runtime, name: "Talk"
 Salt.use Shout
 Salt.use Speaking
 

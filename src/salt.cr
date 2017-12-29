@@ -19,17 +19,18 @@ module Salt
   # Specifies middleware to use in a stack.
   #
   # ```
-  # class Middleware < Salt::App
+  # class App < Salt::App
   #   def call(env)
   #     call_app(env)
   #     [200, {"Content-Type" => "text/html"}, ["<h1>", "Hello Salt", "</h1>"]]
   #   end
   # end
   #
-  # Salt.use Salt::Middlewares::Runtime
-  # Sale.use Middleware
+  # Salt.use Salt::Middlewares::Runtime, name: "Crystal"
+  #
+  # Sale.run App
   # ```
-  def self.use(middleware, *args)
-    Salt::Middlewares.use(middleware, *args)
+  def self.use(middleware, **options)
+    Salt::Middlewares.use(middleware, **options)
   end
 end
