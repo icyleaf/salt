@@ -45,7 +45,7 @@ module Salt
       end
 
       def scheme
-        uri.scheme
+        uri.scheme || "http"
       end
 
       def ssl?
