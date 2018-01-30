@@ -9,7 +9,7 @@ module Salt::Middlewares
   #
   # Be careful when you use this on public-facing sites as it could
   # reveal information helpful to attackers.
-  class ShowExceptions < Salt::App
+  class ShowExceptions < App
     def call(env)
       call_app(env)
 

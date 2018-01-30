@@ -5,7 +5,7 @@ module Salt::Middlewares
   # Salt.use Salt::Middlewares::Logger, io: File.open("development.log", "w"), level: Logger::ERROR
   # Salt.use Salt::Middlewares::Logger, level: Logger::ERROR
   # ```
-  class Logger < Salt::App
+  class Logger < App
     def initialize(@app : App, @io : IO = STDOUT, @level : ::Logger::Severity = ::Logger::INFO)
     end
 

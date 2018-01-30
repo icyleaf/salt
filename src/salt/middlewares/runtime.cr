@@ -6,7 +6,7 @@ module Salt::Middlewares
   # Salt.use Salt::Middlewares::Runtime, name: "Crystal"
   # # X-Runtime => Crystal-X-Runtime
   # ```
-  class Runtime < Salt::App
+  class Runtime < App
     HEADER_NAME = "X-Runtime"
 
     def initialize(@app : App, name : String? = nil)

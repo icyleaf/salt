@@ -13,10 +13,19 @@ module Salt
     # Depend on `Salt::Middlewares::Logger` middleware
     def logger
       if @logger.nil?
-        raise Salt::Exceptions::NotFoundMiddleware.new("Missing `Salt.use Salt::Middlewares::Logger` before Salt::run.")
+        raise Exceptions::NotFoundMiddleware.new("Missing Logger middleware, use Salt::run add it.")
       end
-
       @logger.not_nil!
+    end
+
+    setter session : SessionHash?
+
+    # Depend on `Salt::Middlewares::Session` middleware
+    def session
+      if @session.nil?
+        raise Salt::Exceptions::NotFoundMiddleware.new("Missing Session middleware, use Salt::run add it.")
+      end
+      @session.not_nil!
     end
 
     delegate version, to: @request

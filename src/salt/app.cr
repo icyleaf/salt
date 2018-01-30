@@ -13,7 +13,7 @@ module Salt
 
     abstract def call(env) : Response
 
-    protected def call_app(env : Salt::Environment)
+    protected def call_app(env : Environment)
       if app = @app
         response = app.call(env)
         @status_code = response[0].as(Int32)

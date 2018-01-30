@@ -4,13 +4,13 @@ module Salt
   # Run http server and takes an argument that is an Salt::App that responds to #call
   #
   # ```
-  # class App < Salt::App
+  # class Foo < Salt::App
   #   def call(env)
   #     [200, {"Content-Type" => "text/plain"}, ["hello world"]]
   #   end
   # end
   #
-  # Salt.run App.new
+  # Salt.run Foo.new
   # ```
   def self.run(app : Salt::App, **options)
     Salt::Server.new(**options).run(app)
@@ -19,7 +19,7 @@ module Salt
   # Specifies middleware to use in a stack.
   #
   # ```
-  # class App < Salt::App
+  # class Foo < Salt::App
   #   def call(env)
   #     call_app(env)
   #     [200, {"Content-Type" => "text/html"}, ["<h1>", "Hello Salt", "</h1>"]]
@@ -28,7 +28,7 @@ module Salt
   #
   # Salt.use Salt::Middlewares::Runtime, name: "Crystal"
   #
-  # Sale.run App
+  # Sale.run Foo
   # ```
   def self.use(middleware, **options)
     Salt::Middlewares.use(middleware, **options)
