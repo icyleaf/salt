@@ -1,3 +1,4 @@
+# :nodoc:
 module HTTP
   struct Params
     def self.new

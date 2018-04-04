@@ -169,6 +169,7 @@ module Salt
 
     module Cookies
       @cookies : CookiesProxy?
+
       def cookies
         @cookies ||= CookiesProxy.new(@context)
         @cookies.not_nil!
@@ -179,10 +180,9 @@ module Salt
         end
 
         def add(name : String, value : String, path : String = "/",
-                  expires : Time? = nil, domain : String? = nil,
-                  secure : Bool = false, http_only : Bool = false,
-                  extension : String? = nil)
-
+                expires : Time? = nil, domain : String? = nil,
+                secure : Bool = false, http_only : Bool = false,
+                extension : String? = nil)
           cookie = HTTP::Cookie.new(name, value, path, expires, domain, secure, http_only, extension)
           add(cookie)
         end

@@ -1,9 +1,35 @@
 require "./spec_helper"
 
 describe Salt do
-  # TODO: Write tests
+  describe "#alias class" do
+    context "Runtime" do
+      it "should alias Salt::Middlewares::Runtime" do
+        Salt::Runtime.should be_a Salt::Middlewares::Runtime.class
+      end
+    end
 
-  it "works" do
-    false.should eq(true)
+    context "Logger" do
+      it "should alias Salt::Middlewares::Logger" do
+        Salt::Logger.should be_a Salt::Middlewares::Logger.class
+      end
+    end
+
+    context "CommonLogger" do
+      it "should alias Salt::Middlewares::Runtime" do
+        Salt::CommonLogger.should be_a Salt::Middlewares::CommonLogger.class
+      end
+    end
+
+    context "ShowExceptions" do
+      it "should alias Salt::Middlewares::Runtime" do
+        Salt::ShowExceptions.should be_a Salt::Middlewares::ShowExceptions.class
+      end
+    end
+
+    context "Session::Cookie" do
+      it "should alias Salt::Middlewares::Runtime" do
+        Salt::Session::Cookie.should be_a Salt::Middlewares::Session::Cookie.class
+      end
+    end
   end
 end

@@ -33,4 +33,12 @@ module Salt
   def self.use(middleware, **options)
     Salt::Middlewares.use(middleware, **options)
   end
+
+  # Set alias of middlewares
+
+  alias Runtime = Middlewares::Runtime
+  alias Logger = Middlewares::Logger
+  alias CommonLogger = Middlewares::CommonLogger
+  alias ShowExceptions = Middlewares::ShowExceptions
+  alias Session = Middlewares::Session
 end
