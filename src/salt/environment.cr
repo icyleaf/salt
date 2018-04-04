@@ -1,30 +1,35 @@
+require "./middlewares/session/abstract/session_hash"
 require "uri"
 
 module Salt
   class Environment
     @request : HTTP::Request
+    @response : HTTP::Server::Response
 
     def initialize(@context : HTTP::Server::Context)
       @request = @context.request
+      @response = @context.response
     end
 
-    setter logger : ::Logger?
+    property? logger : ::Logger?
 
     # Depend on `Salt::Middlewares::Logger` middleware
     def logger
-      if @logger.nil?
+      unless logger?
         raise Exceptions::NotFoundMiddleware.new("Missing Logger middleware, use Salt::run add it.")
       end
+
       @logger.not_nil!
     end
 
-    setter session : SessionHash?
+    property? session : Salt::Middlewares::Session::Abstract::SessionHash?
 
-    # Depend on `Salt::Middlewares::Session` middleware
+    # Depend on `Salt::Middlewares::Session::Cookie` middleware
     def session
-      if @session.nil?
+      unless session?
         raise Salt::Exceptions::NotFoundMiddleware.new("Missing Session middleware, use Salt::run add it.")
       end
+
       @session.not_nil!
     end
 
@@ -163,7 +168,43 @@ module Salt
     end
 
     module Cookies
-      delegate cookies, to: @request
+      @cookies : CookiesProxy?
+      def cookies
+        @cookies ||= CookiesProxy.new(@context)
+        @cookies.not_nil!
+      end
+
+      class CookiesProxy
+        def initialize(@context : HTTP::Server::Context)
+        end
+
+        def add(name : String, value : String, path : String = "/",
+                  expires : Time? = nil, domain : String? = nil,
+                  secure : Bool = false, http_only : Bool = false,
+                  extension : String? = nil)
+
+          cookie = HTTP::Cookie.new(name, value, path, expires, domain, secure, http_only, extension)
+          add(cookie)
+        end
+
+        def add(cookie : HTTP::Cookie)
+          @context.response.cookies << cookie
+        end
+
+        def <<(cookie : HTTP::Cookie)
+          add(cookie)
+        end
+
+        def get(name : String)
+          @context.request.cookies[name]
+        end
+
+        def get?(name : String)
+          @context.request.cookies[name]?
+        end
+
+        forward_missing_to @context.request.cookies
+      end
     end
 
     include URI
