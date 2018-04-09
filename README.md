@@ -67,14 +67,18 @@ Salt.run Talk.new
 ## TODO
 
 - [x] Web Server
-  - [x] request params
+  - [x] request query params
+  - [x] request params in body
+  - [x] request files
   - [x] get/set cookie
-  - [x] response
 - [ ] Middlewares
   - [x] ShowExceptions
   - [x] CommonLogger
+  - [x] Logger
   - [x] Runtime
   - [x] Session(Cookie/Redis)
+  - [x] Head
+  - [ ] File
   - [ ] Directory
   - [ ] SendFile
   - [ ] Static

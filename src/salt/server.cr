@@ -11,26 +11,14 @@ module Salt
     property options : Hash(String, String | Int32 | Bool)
 
     def initialize(**options)
-      @options = parse_options **options
+      @options = parse_options(**options)
       @logger = ::Logger.new(STDOUT)
     end
 
-    def run(run_app : Salt::App)
-      @run_app = run_app
+    def run(app : Salt::App)
+      @run_app = app
       display_info
       run_server
-    end
-
-    def wrapped_app
-      @wrapped_app ||= build_app(app).as(Salt::App)
-    end
-
-    def app
-      @app ||= Salt::Middlewares.to_app(run_app).as(Salt::App)
-    end
-
-    def run_app
-      @run_app.not_nil!
     end
 
     private def run_server
@@ -43,6 +31,18 @@ module Salt
 
     private def handler
       Salt::Server::Handler.new(wrapped_app)
+    end
+
+    private def wrapped_app
+      @wrapped_app ||= build_app(app).as(Salt::App)
+    end
+
+    private def app
+      @app ||= Salt::Middlewares.to_app(run_app).as(Salt::App)
+    end
+
+    private def run_app
+      @run_app.not_nil!
     end
 
     private def build_app(app : Salt::App) : Salt::App

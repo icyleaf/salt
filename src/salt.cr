@@ -41,4 +41,5 @@ module Salt
   alias CommonLogger = Middlewares::CommonLogger
   alias ShowExceptions = Middlewares::ShowExceptions
   alias Session = Middlewares::Session
+  alias Head = Middlewares::Head
 end

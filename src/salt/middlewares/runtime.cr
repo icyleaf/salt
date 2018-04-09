@@ -9,9 +9,10 @@ module Salt::Middlewares
   class Runtime < App
     HEADER_NAME = "X-Runtime"
 
+    @header_name : String
+
     def initialize(@app : App, name : String? = nil)
-      @header_name = HEADER_NAME
-      @header_name += "-#{name}" unless name.to_s.empty?
+      @header_name = header_for(name)
     end
 
     def call(env)
@@ -31,6 +32,14 @@ module Salt::Middlewares
       block.call
       elapsed = Time.now - start_time
       elapsed.to_f.round(6).to_s
+    end
+
+    private def header_for(name)
+      if name.to_s.empty?
+        HEADER_NAME
+      else
+        "#{HEADER_NAME}-#{name}"
+      end
     end
   end
 end
