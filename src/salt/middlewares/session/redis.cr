@@ -1,5 +1,4 @@
-require "./abstract/session_hash"
-require "./abstract/id"
+require "./abstract/*"
 require "redis"
 require "json"
 
@@ -24,8 +23,8 @@ module Salt::Middlewares::Session
   # ```
   #
   # All parameters are optional.
-  class Redis < Abstract::ID
-    DEFAULT_OPTIONS = Abstract::ID::DEFAULT_OPTIONS.to_h.merge({
+  class Redis < Abstract::Persisted
+    DEFAULT_OPTIONS = Abstract::Persisted::DEFAULT_OPTIONS.to_h.merge({
       :server => "redis://localhost:6379/0",
       :namespace => "salt:session"
     })
@@ -37,7 +36,7 @@ module Salt::Middlewares::Session
       @pool = ::Redis.new(url: @options[:server].as(String))
     end
 
-    def get_session(env : Environment, session_id : String?)
+    def find_session(env : Environment, session_id : String?)
       unless session_id && (session_data = get_key(session_id))
         session_id = generate_session_id
         session_data = Hash(String, String).new
@@ -49,12 +48,12 @@ module Salt::Middlewares::Session
       Abstract::SessionStored.new(session_id, session_data)
     end
 
-    def set_session(env : Environment, session_id : String, session : Hash(String, String))
+    def write_session(env : Environment, session_id : String, session : Hash(String, String))
       set_key(session_id, session, expiry)
       session_id
     end
 
-    def destory_session(env : Environment, session_id : String)
+    def delete_session(env : Environment, session_id : String)
       del_key(session_id)
       generate_session_id unless @options[:drop]
     end

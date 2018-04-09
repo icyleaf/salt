@@ -1,5 +1,4 @@
-require "./abstract/session_hash"
-require "./abstract/persisted"
+require "./abstract/*"
 
 require "openssl/hmac"
 require "base64"
