@@ -21,7 +21,7 @@ module Salt::Middlewares::Session::Abstract
     @options : Hash(Symbol, String | Bool | Int32 | Nil)
 
     def initialize(@app : App, **options)
-      @options = merge_options(**options)
+      @options = merge_options(DEFAULT_OPTIONS, **options)
 
       @key = @options[:key].as(String)
       @session_id_bits = @options[:session_id_bits].as(Int32)
@@ -38,14 +38,21 @@ module Salt::Middlewares::Session::Abstract
 
     def commit_session(env)
       session = env.session
+      options = session.options
+
+      if options[:drop]? || options[:renew]?
+        session_id = delete_session(env, session.id || generate_session_id)
+        return unless session_id
+      end
+
       session.load! unless loaded_session?(session)
 
-      session_id = session.id
+      session_id = session.id.not_nil!
       session_data = session.to_h.delete_if { |_,v| v.nil? }
 
       if data = write_session(env, session_id, session_data)
-        http_only = @options[:http_only].as(Bool)
-        secure = @options[:secure].as(Bool)
+        http_only = options[:http_only].as(Bool)
+        secure = options[:secure].as(Bool)
         cookie = HTTP::Cookie.new(@key, data, expires: expires, http_only: http_only, secure: secure)
         set_cookie(env, cookie)
       else
@@ -82,8 +89,8 @@ module Salt::Middlewares::Session::Abstract
     end
 
     abstract def find_session(env : Environment, session_id : String?) : SessionStored
-    abstract def write_session(env : Environment, session_id : String?, session : Hash(String, String)) : String?
-    abstract def delete_session(env : Environment, session_id : String) : Bool
+    abstract def write_session(env : Environment, session_id : String, session : Hash(String, String)) : String?
+    abstract def delete_session(env : Environment, session_id : String) : String?
 
     private def prepare_session(env : Environment)
       session_was = env.session? ? env.session : nil
@@ -101,13 +108,12 @@ module Salt::Middlewares::Session::Abstract
       env.session.id
     end
 
-    private def merge_options(**options)
-      merged_options = DEFAULT_OPTIONS
+    private def merge_options(defaults, **options)
       options.each do |key, value|
-        merge_options[key] = value if merged_options.has_key?(key)
+        defaults[key] = value if defaults.has_key?(key)
       end
 
-      merged_options
+      defaults
     end
 
     private def expires : Time?

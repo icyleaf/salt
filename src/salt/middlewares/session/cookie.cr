@@ -1,4 +1,5 @@
-require "./abstract/*"
+require "./abstract/session_hash"
+require "./abstract/persisted"
 
 require "openssl/hmac"
 require "base64"
@@ -18,8 +19,6 @@ module Salt::Middlewares::Session
   #
   # Example:
   #
-  # > All parameters are optional.
-  #
   # ```
   # use Salt::Session::Cookie, key: "salt.session",
   #                            domain: "foobar.com",
@@ -27,6 +26,8 @@ module Salt::Middlewares::Session
   #                            secret: "change_me",
   #                            old_secret: "change_me"
   # ```
+  #
+  # All parameters are optional.
   class Cookie < Abstract::Persisted
     abstract class Base64
       abstract def encode(data)
@@ -123,7 +124,7 @@ module Salt::Middlewares::Session
       stored
     end
 
-    def write_session(env : Environment, session_id : String?, session : Hash(String, String))
+    def write_session(env : Environment, session_id : String, session : Hash(String, String))
       session = session.merge({SESSION_ID => session_id})
       session_data = @coder.encode(session)
       digest = generate_hmac(@secrets.first, session_data)
@@ -163,7 +164,7 @@ module Salt::Middlewares::Session
       session_id ||= generate_session_id
       data[SESSION_ID] = session_id unless data.has_key?(SESSION_ID)
 
-      Salt::Middlewares::Session::Abstract::SessionStored.new(session_id, data)
+      Abstract::SessionStored.new(session_id, data)
     end
 
     private def generate_hmac(key : String, data : String)

@@ -74,14 +74,19 @@ module Salt::Middlewares::Session::Abstract
       end
     end
 
+    def delete(key : String)
+      load_for_write!
+      @data.delete(key)
+    end
+
     def clear
       load_for_write!
       @data.clear
     end
 
-    def delete(key : String)
-      load_for_write!
-      @data.delete(key)
+    def destroy
+      clear
+      @id = @store.delete_session(@env, id)
     end
 
     def id
