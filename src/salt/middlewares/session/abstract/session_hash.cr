@@ -7,7 +7,7 @@ module Salt::Middlewares::Session::Abstract
 
     @exists : Bool?
     @id : String?
-    property data : Hash(String, String)
+    @data : Hash(String, String)
 
     def initialize(@store : Persisted, @env : Environment, @loaded = false)
       @exists = nil

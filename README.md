@@ -1,11 +1,13 @@
 # salt
 
-> **atention**: This is a early-stage project.
-
+![Status](https://img.shields.io/badge/status-WIP-yellow.svg)
 ![Language](https://img.shields.io/badge/language-crystal-black.svg)
+[![Tag](https://img.shields.io/github/tag/icyleaf/salt.svg)](https://github.com/icyleaf/salt/blob/master/CHANGELOG.md)
+[![Dependency Status](https://shards.rocks/badge/github/icyleaf/salt/status.svg)](https://shards.rocks/github/icyleaf/salt)
+[![devDependency Status](https://shards.rocks/badge/github/icyleaf/salt/dev_status.svg)](https://shards.rocks/github/icyleaf/salt)
 [![License](https://img.shields.io/github/license/icyleaf/salt.svg)](https://github.com/icyleaf/salt/blob/master/LICENSE)
 
-A easy use Crystal modular webserver interface for Humans. Inspired from Ruby's [rack](https://github.com/rack/rack) gem.
+A easy use Crystal modular webserver interface for Humans. Heavily inspired from Ruby's [rack](https://github.com/rack/rack) gem.
 
 ## Installation
 
@@ -15,6 +17,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   salt:
     github: icyleaf/salt
+    branch: master
 ```
 
 ## Usage
