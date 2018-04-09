@@ -7,13 +7,13 @@
 <p align="center">
   salt
   <br />
-  A easy use Crystal modular webserver interface for Humans. Heavily inspired from Ruby's <a href="https://github.com/rack/rack">rack</a> gem.
+  A easy use Crystal modular webserver interface for Humans.
 </p>
 
 <p align="center">
   <img alt="Project Status" src="https://img.shields.io/badge/status-WIP-yellow.svg">
   <a href="https://crystal-lang.org/"><img alt="Langugea" src="https://img.shields.io/badge/language-crystal-776791.svg"></a>
-  <a href="https://github.com/icyleaf/hpr/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/icyleaf/salt.svg"></a>
+  <a href="https://github.com/icyleaf/salt/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/icyleaf/salt.svg"></a>
 </p>
 
 <p align="center">
@@ -64,6 +64,23 @@ Salt.run Talk.new
 
 ```
 
+## TODO
+
+- [x] Web Server
+  - [x] request params
+  - [x] get/set cookie
+  - [x] response
+- [ ] Middlewares
+  - [x] ShowExceptions
+  - [x] CommonLogger
+  - [x] Runtime
+  - [x] Session(Cookie/Redis)
+  - [ ] Directory
+  - [ ] SendFile
+  - [ ] Static
+  - [ ] ETag
+  - [ ] Flash (Rails)
+
 ## Contributing
 
 1. Fork it ( https://github.com/icyleaf/salt/fork )
@@ -75,3 +92,7 @@ Salt.run Talk.new
 ## Contributors
 
 - [icyleaf](https://github.com/icyleaf) - creator, maintainer
+
+## Resouces
+
+Heavily inspired from Ruby's <a href="https://github.com/rack/rack">rack</a> gem.
