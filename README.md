@@ -1,13 +1,24 @@
-# salt
+<p align="center">
+  <a href="https://github.com/icyleaf/salt">
+    <img alt="salt icon" src="./icon.svg" width="240" height="240" />
+  </a>
+</p>
 
-![Status](https://img.shields.io/badge/status-WIP-yellow.svg)
-![Language](https://img.shields.io/badge/language-crystal-black.svg)
-[![Tag](https://img.shields.io/github/tag/icyleaf/salt.svg)](https://github.com/icyleaf/salt/blob/master/CHANGELOG.md)
-[![Dependency Status](https://shards.rocks/badge/github/icyleaf/salt/status.svg)](https://shards.rocks/github/icyleaf/salt)
-[![devDependency Status](https://shards.rocks/badge/github/icyleaf/salt/dev_status.svg)](https://shards.rocks/github/icyleaf/salt)
-[![License](https://img.shields.io/github/license/icyleaf/salt.svg)](https://github.com/icyleaf/salt/blob/master/LICENSE)
+<p align="center">
+  salt
+  <br />
+  A easy use Crystal modular webserver interface for Humans. Heavily inspired from Ruby's <a href="https://github.com/rack/rack">rack</a> gem.
+</p>
 
-A easy use Crystal modular webserver interface for Humans. Heavily inspired from Ruby's [rack](https://github.com/rack/rack) gem.
+<p align="center">
+  <img alt="Project Status" src="https://img.shields.io/badge/status-WIP-yellow.svg">
+  <a href="https://crystal-lang.org/"><img alt="Langugea" src="https://img.shields.io/badge/language-crystal-776791.svg"></a>
+  <a href="https://github.com/icyleaf/hpr/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/icyleaf/salt.svg"></a>
+</p>
+
+<p align="center">
+  "Salt" icon by Creative Stall from <a href="https://thenounproject.com">Noun Project</a>.
+</p>
 
 ## Installation
 
@@ -64,8 +75,3 @@ Salt.run Talk.new
 ## Contributors
 
 - [icyleaf](https://github.com/icyleaf) - creator, maintainer
-
-
-## Thanks
-
-Icons made [Creaticca Creative Agency](https://www.flaticon.com/authors/creaticca-creative-agency) from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
