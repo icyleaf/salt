@@ -7,6 +7,13 @@ Signal::TERM.trap { puts "Caught kill"; exit }
 
 module Salt
   class Server
+    enum Environment
+      DEVELOPMENT
+      PRODUCTION
+      STAG
+      TEST
+    end
+
     property logger : ::Logger
     property options : Hash(String, String | Int32 | Bool)
 
@@ -15,13 +22,24 @@ module Salt
       @logger = default_logger
     end
 
-    def run(app : Salt::App)
-      @run_app = app
+    def run(@run_app : Salt::App)
       display_info
       run_server
     end
 
-    private def run_server
+    def default_middlewares
+      @middlewares ||= {
+        "development" => [
+          Salt::Middlewares::CommonLogger.as(Salt::App.class),
+          Salt::Middlewares::ShowExceptions.as(Salt::App.class),
+        ],
+        "production" => [
+          Salt::Middlewares::CommonLogger.as(Salt::App.class),
+        ]
+      }.as(Hash(String, Array(Salt::App.class)))
+    end
+
+    def run_server
       HTTP::Server.new(
         @options["host"].as(String),
         @options["port"].as(Int32),
@@ -46,23 +64,11 @@ module Salt
     end
 
     private def build_app(app : Salt::App) : Salt::App
-      default_middlewares[options["environment"]].each do |klass|
+      default_middlewares[@options["environment"]].each do |klass|
         app = klass.new(app)
       end
 
       app
-    end
-
-    private def default_middlewares
-      @middlewares ||= {
-        "development" => [
-          Salt::Middlewares::CommonLogger.as(Salt::App.class),
-          Salt::Middlewares::ShowExceptions.as(Salt::App.class),
-        ],
-        "deployment" => [
-          Salt::Middlewares::CommonLogger.as(Salt::App.class),
-        ],
-      }.as(Hash(String, Array(Salt::App.class)))
     end
 
     private def parse_options(**options)

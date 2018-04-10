@@ -44,4 +44,9 @@ module Salt
   alias Head = Middlewares::Head
   alias File = Middlewares::File
   alias Directory = Middlewares::Directory
+
+  # Set alias of environment of server
+  {% for name in Server::Environment.constants %}
+    {{ name.id }} = Server::Environment::{{ name.id }}.value
+  {% end %}
 end
