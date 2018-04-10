@@ -2,7 +2,7 @@ require "mime"
 
 module Salt::Middlewares
   # Salt::File serves files below the **root** directory given, according to the
-  # path info of the Rack request.
+  # path info of the Salt request.
   #
   # Example:
   #
