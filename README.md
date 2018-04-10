@@ -34,12 +34,11 @@ dependencies:
 ## Usage
 
 ```crystal
-require "salt"
-
 class Talk < Salt::App
   def call(env)
     env.session.set("username", "icyleaf")
 
+    env.logger.info("Start Talking!")
     [400, { "Content-Type" => "text/plain" }, ["Can I talk to salt?"]]
   end
 end
@@ -47,6 +46,8 @@ end
 class Shout < Salt::App
   def call(env)
     call_app(env)
+
+    env.logger.debug("Shout class")
     [status_code, headers, body.map &.upcase ]
   end
 end
@@ -54,12 +55,14 @@ end
 class Speaking < Salt::App
   def call(env)
     call_app(env)
+
+    env.logger.debug("Speaking class")
     [200, { "Content-Type" => "text/plain" }, ["This is Slat speaking! #{env.session.get("username")}"]]
   end
 end
 
 Salt.use Salt::Session::Cookie, secret: "<change me>"
-Salt.use Salt::Logger
+Salt.use Salt::Logger, level: Logger::DEBUG, progname: "app"
 Salt.use Shout
 Salt.use Speaking
 
@@ -85,7 +88,7 @@ Salt.run Talk.new
   - [ ] Static
   - [ ] SendFile
   - [ ] ETag
-  - [ ] Flash (Rails)
+  - [ ] Rails Flash (maybe)
 
 ## Contributing
 

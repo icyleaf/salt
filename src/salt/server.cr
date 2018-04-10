@@ -12,7 +12,7 @@ module Salt
 
     def initialize(**options)
       @options = parse_options(**options)
-      @logger = ::Logger.new(STDOUT)
+      @logger = default_logger
     end
 
     def run(app : Salt::App)
@@ -74,6 +74,12 @@ module Salt
 
         ENV["SALT_ENV"] = obj["environment"].to_s
       end
+    end
+
+    private def default_logger
+      logger = ::Logger.new(STDOUT)
+      logger.progname = "salt"
+      logger
     end
 
     private def display_info
