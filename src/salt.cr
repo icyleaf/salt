@@ -43,4 +43,5 @@ module Salt
   alias Session = Middlewares::Session
   alias Head = Middlewares::Head
   alias File = Middlewares::File
+  alias Directory = Middlewares::Directory
 end
