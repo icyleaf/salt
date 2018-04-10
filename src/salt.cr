@@ -42,4 +42,5 @@ module Salt
   alias ShowExceptions = Middlewares::ShowExceptions
   alias Session = Middlewares::Session
   alias Head = Middlewares::Head
+  alias File = Middlewares::File
 end

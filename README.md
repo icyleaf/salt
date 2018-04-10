@@ -78,7 +78,7 @@ Salt.run Talk.new
   - [x] Runtime
   - [x] Session(Cookie/Redis)
   - [x] Head
-  - [ ] File
+  - [x] File
   - [ ] Directory
   - [ ] SendFile
   - [ ] Static
