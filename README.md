@@ -7,7 +7,7 @@
 <p align="center">
   salt
   <br />
-  A easy use Crystal modular webserver interface for Humans.
+  A Human Friendly Interface for HTTP webservers written in Crystal.
 </p>
 
 <p align="center">
