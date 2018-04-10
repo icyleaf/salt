@@ -20,10 +20,10 @@ module Salt::Middlewares::Session
   #
   # ```
   # use Salt::Session::Cookie, key: "salt.session",
-  #                            domain: "foobar.com",
-  #                            expire_after: 2592000,
-  #                            secret: "change_me",
-  #                            old_secret: "change_me"
+  #   domain: "foobar.com",
+  #   expire_after: 2592000,
+  #   secret: "change_me",
+  #   old_secret: "change_me"
   # ```
   #
   # All parameters are optional.
@@ -183,7 +183,7 @@ module Salt::Middlewares::Session
 
         l = digest.bytes
         r, i = 0, -1
-        target.each_byte { |v| r |= v ^ l[i+=1] }
+        target.each_byte { |v| r |= v ^ l[i += 1] }
         r == 0
       end
     end

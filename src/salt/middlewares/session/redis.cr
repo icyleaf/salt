@@ -19,14 +19,14 @@ module Salt::Middlewares::Session
   #
   # ```
   # use Salt::Session::Redis, server: "redis://localhost:6379/0",
-  #                           namspace: "salt:session"
+  #   namspace: "salt:session"
   # ```
   #
   # All parameters are optional.
   class Redis < Abstract::Persisted
     DEFAULT_OPTIONS = Abstract::Persisted::DEFAULT_OPTIONS.to_h.merge({
-      :server => "redis://localhost:6379/0",
-      :namespace => "salt:session"
+      :server    => "redis://localhost:6379/0",
+      :namespace => "salt:session",
     })
 
     def initialize(@app : App, **options)
@@ -91,7 +91,7 @@ module Salt::Middlewares::Session
 
     private def set_key(key : String, hash : Hash(String, _), expiry = 0)
       hash.each do |field, value|
-       @pool.hset(namespace_to(key), field, value.to_s)
+        @pool.hset(namespace_to(key), field, value.to_s)
       end
       set_key_expire(key, expiry) if expiry > 0
 

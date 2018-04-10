@@ -15,7 +15,7 @@ module Salt::Middlewares
   # like sendfile on the **path**.
   class File < App
     ALLOWED_VERBS = %w[GET HEAD OPTIONS]
-    ALLOW_HEADER = ALLOWED_VERBS.join(", ")
+    ALLOW_HEADER  = ALLOWED_VERBS.join(", ")
 
     def initialize(@app : App? = nil, root : String = ".",
                    @headers = {} of String => String, @default_mime = "text/plain")
@@ -29,7 +29,7 @@ module Salt::Middlewares
 
     private def get(env)
       unless ALLOWED_VERBS.includes?(env.method)
-        return fail(405, "Method Not Allowed", { "Allow" => ALLOW_HEADER })
+        return fail(405, "Method Not Allowed", {"Allow" => ALLOW_HEADER})
       end
 
       path_info = URI.unescape(env.path)
@@ -51,14 +51,14 @@ module Salt::Middlewares
 
     private def serving(env, path)
       if env.options?
-        return [200, { "Allow" => ALLOW_HEADER, "Content-length" => "0"}, [] of String]
+        return [200, {"Allow" => ALLOW_HEADER, "Content-length" => "0"}, [] of String]
       end
 
       last_modified = HTTP.rfc1123_date(::File.stat(path).mtime)
       return [304, {} of String => String, [] of String] if env.headers["HTTP_IF_MODIFIED_SINCE"]? == last_modified
 
       headers = {
-        "Last-Modified" => last_modified,
+        "Last-Modified"  => last_modified,
         "Content-Length" => ::File.size(path).to_s,
       }.merge(@headers)
       headers["Content-Type"] = "#{mime_type(path)}; charset=utf-8"
@@ -69,7 +69,7 @@ module Salt::Middlewares
         end
       end
 
-      [ 200, headers, [ body.to_s ]]
+      [200, headers, [body.to_s]]
     end
 
     private def fail(code : Int32, body : String, headers = {} of String => String)
@@ -78,9 +78,9 @@ module Salt::Middlewares
         {
           "Content-Type"   => "text/plain; charset=utf-8",
           "Content-Length" => body.bytesize.to_s,
-          "X-Cascade"     => "pass"
+          "X-Cascade"      => "pass",
         }.merge(headers),
-        [body]
+        [body],
       ]
     end
 

@@ -48,7 +48,7 @@ module Salt::Middlewares::Session::Abstract
       session.load! unless loaded_session?(session)
 
       session_id = session.id.not_nil!
-      session_data = session.to_h.delete_if { |_,v| v.nil? }
+      session_data = session.to_h.delete_if { |_, v| v.nil? }
 
       if data = write_session(env, session_id, session_data)
         http_only = options[:http_only].as(Bool)
