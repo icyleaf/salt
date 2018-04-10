@@ -72,20 +72,19 @@ module Salt::Middlewares
       [ 200, headers, [ body.to_s ]]
     end
 
-    private def fail(code, body, headers = {} of String => String)
-      body += "\n"
+    private def fail(code : Int32, body : String, headers = {} of String => String)
       [
         code,
         {
           "Content-Type"   => "text/plain; charset=utf-8",
-          "Content-Length" => body.size.to_s,
+          "Content-Length" => body.bytesize.to_s,
           "X-Cascade"     => "pass"
         }.merge(headers),
         [body]
       ]
     end
 
-    private def mime_type(path)
+    private def mime_type(path : String)
       mime = Mime.from_ext(::File.extname(path)[1..-1])
       mime ? mime : @default_mime
     end
