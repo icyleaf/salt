@@ -79,9 +79,9 @@ Salt.run Talk.new
   - [x] Session(Cookie/Redis)
   - [x] Head
   - [x] File
-  - [ ] Directory
-  - [ ] SendFile
+  - [x] Directory
   - [ ] Static
+  - [ ] SendFile
   - [ ] ETag
   - [ ] Flash (Rails)
 
