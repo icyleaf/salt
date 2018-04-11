@@ -35,7 +35,7 @@ module Salt
         ],
         "deployment" => [
           Salt::Middlewares::CommonLogger.as(Salt::App.class),
-        ]
+        ],
       }.as(Hash(String, Array(Salt::App.class)))
     end
 

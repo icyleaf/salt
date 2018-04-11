@@ -24,10 +24,10 @@ module Salt
 
     property? session : Salt::Middlewares::Session::Abstract::SessionHash?
 
-    # Depend on `Salt::Middlewares::Session::Cookie` middleware
+    # Depend on `Salt::Middlewares::Session` middleware
     def session
       unless session?
-        raise Salt::Exceptions::NotFoundMiddleware.new("Missing Session middleware, use Salt::run add it.")
+        raise Exceptions::NotFoundMiddleware.new("Missing Session middleware, use Salt::run add it.")
       end
 
       @session.not_nil!
