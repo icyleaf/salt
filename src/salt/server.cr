@@ -33,7 +33,7 @@ module Salt
           Salt::Middlewares::CommonLogger.as(Salt::App.class),
           Salt::Middlewares::ShowExceptions.as(Salt::App.class),
         ],
-        "production" => [
+        "deployment" => [
           Salt::Middlewares::CommonLogger.as(Salt::App.class),
         ]
       }.as(Hash(String, Array(Salt::App.class)))
@@ -64,8 +64,8 @@ module Salt
     end
 
     private def build_app(app : Salt::App) : Salt::App
-      default_middlewares[@options["environment"]].each do |klass|
-        app = klass.new(app)
+      if middwares = default_middlewares[@options["environment"]]?
+        middlewares.each { |klass| app = klass.new(app) }
       end
 
       app
