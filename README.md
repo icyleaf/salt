@@ -1,12 +1,8 @@
 <p align="center">
-  <a href="https://github.com/icyleaf/salt">
-    <img alt="salt icon" src="./icon.svg" width="240" height="240" />
-  </a>
+  <img alt="salt icon" src="./icon.svg" width="240" height="240" />
 </p>
 
 <p align="center">
-  salt
-  <br />
   A Human Friendly Interface for HTTP webservers written in Crystal.
 </p>
 
@@ -37,7 +33,6 @@ dependencies:
 class Talk < Salt::App
   def call(env)
     env.session.set("username", "icyleaf")
-
     env.logger.info("Start Talking!")
     [400, { "Content-Type" => "text/plain" }, ["Can I talk to salt?"]]
   end
