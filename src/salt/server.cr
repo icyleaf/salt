@@ -64,7 +64,7 @@ module Salt
     end
 
     private def build_app(app : Salt::App) : Salt::App
-      if middwares = default_middlewares[@options["environment"]]?
+      if middlewares = default_middlewares[@options["environment"]]?
         middlewares.each { |klass| app = klass.new(app) }
       end
 
