@@ -2,6 +2,21 @@ require "colorize"
 
 module Salt::Middlewares
   # `Salt::CommonLogger` forwards every request to the given app.
+  #
+  # ### Example
+  #
+  # #### Use built-in logger(`STDOUT`)
+  #
+  # ```
+  # Salt.use Salt::CommonLogger
+  #
+  # ```
+  #
+  # #### Use custom logger
+  #
+  # ```
+  # Salt.use Salt::CommonLogger, io : File.open("development.log")
+  # ```
   class CommonLogger < App
     FORMAT = %{%s |%s| %12s |%s %s%s}
 

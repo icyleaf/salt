@@ -1,6 +1,8 @@
 module Salt::Middlewares
   # Sets up env.logger to write to STDOUT stream
   #
+  # ### Example
+  #
   # ```
   # Salt.use Salt::Middlewares::Logger, io: File.open("development.log", "w"), level: Logger::ERROR
   # Salt.use Salt::Middlewares::Logger, level: Logger::ERROR

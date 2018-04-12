@@ -2,6 +2,8 @@ require "./middlewares/session/abstract/session_hash"
 require "uri"
 
 module Salt
+  # `Salt::Environment` provides a convenient interface to a Salt environment.
+  # It is stateless, the environment **env** passed to the constructor will be directly modified.
   class Environment
     @request : HTTP::Request
     @response : HTTP::Server::Response

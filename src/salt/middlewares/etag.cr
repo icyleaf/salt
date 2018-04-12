@@ -1,6 +1,7 @@
 require "openssl"
 
 module Salt::Middlewares
+  # `Salt::ETag` append a weak 'ETag'/`Cache-Control` to header for all requests.
   class ETag < App
     ETAG_STRING           = "ETag"
     CACHE_CONTROL_STRING  = "Cache-Control"
