@@ -4,8 +4,8 @@ module Salt
     @@middlewares = [] of Proc(App, App)
 
     # By default, use `Salt.use` instead this.
-    def self.use(middleware_class, **options)
-      proc = ->(app : App) { middleware_class.new(app, **options).as(App) }
+    def self.use(klass, **options)
+      proc = ->(app : App) { klass.new(app, **options).as(App) }
       @@middlewares << proc
     end
 
