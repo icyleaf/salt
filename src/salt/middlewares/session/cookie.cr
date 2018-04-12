@@ -6,7 +6,7 @@ require "json"
 require "zlib"
 
 module Salt::Middlewares::Session
-  # Salt::Session::Cookie provides simple cookie based session management.
+  # `Salt::Session::Cookie` provides simple cookie based session management.
   #
   # By default, the session is a Crystal Hash stored as base64 encoded marshalled
   # data set to `key` (default: `salt.session`).  The object that encodes the
@@ -16,7 +16,7 @@ module Salt::Middlewares::Session
   # When the secret key is set, cookie data is checked for data integrity.
   # The old secret key is also accepted and allows graceful secret rotation.
   #
-  # Example:
+  # ### Examples
   #
   # ```
   # use Salt::Session::Cookie, key: "salt.session",

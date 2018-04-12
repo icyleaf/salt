@@ -1,16 +1,20 @@
 module Salt
+  # `Salt::Middlewares` manages all about middlewares.
   module Middlewares
     @@middlewares = [] of Proc(App, App)
 
+    # By default, use `Salt.use` instead this.
     def self.use(middleware_class, **options)
-      proc = ->(app : App) { middleware_class.new(app, **options).as(Salt::App) }
+      proc = ->(app : App) { middleware_class.new(app, **options).as(App) }
       @@middlewares << proc
     end
 
-    def self.to_app(run : App) : App
-      @@middlewares.reverse.reduce(run) { |a, e| e.call(a) }
+    # Conversion middleweares into app
+    def self.to_app(app : App) : App
+      @@middlewares.reverse.reduce(app) { |a, e| e.call(a) }
     end
 
+    # Clear all middlewares
     def self.clear
       @@middlewares.clear
     end

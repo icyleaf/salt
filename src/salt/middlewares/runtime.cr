@@ -2,9 +2,10 @@ module Salt::Middlewares
   # Sets an "X-Runtime" response header, indicating the response
   # time of the request, in seconds
   #
+  # ### Example
+  #
   # ```
-  # Salt.use Salt::Middlewares::Runtime, name: "Crystal"
-  # # X-Runtime => Crystal-X-Runtime
+  # Salt.use Salt::Middlewares::Runtime, name: "Salt"
   # ```
   class Runtime < App
     HEADER_NAME = "X-Runtime"

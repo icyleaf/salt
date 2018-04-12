@@ -1,12 +1,12 @@
 module Salt::Middlewares
-  # Salt::Directory serves entries below the **root** given, according to the
+  # `Salt::Directory` serves entries below the **root** given, according to the
   # path info of the Salt request. If a directory is found, the file's contents
   # will be presented in an html based index. If a file is found, the env will
   # be passed to the specified **app**.
   #
   # If **app** is not specified, a Salt::File of the same **root** will be used.
   #
-  # Example:
+  # ### Examples
   #
   # ```
   # Salt.run Salt::Directory.new(root: "~/")

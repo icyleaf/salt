@@ -6,6 +6,16 @@ Signal::INT.trap { puts "\nCaught Ctrl+C and Goodbye."; exit }
 Signal::TERM.trap { puts "Caught kill"; exit }
 
 module Salt
+  # A Salt Server.
+  #
+  # ### Options
+  # - `app`: a salt application to run
+  # - `environment`: this selects the middleware that will be wrapped around. available are:
+  #   - `development`: `Salt::CommonLogger`, `Salt::ShowExceptions`
+  #   - `deployment`: `Salt::CommonLogger`
+  #   - `none`: no extra middleware
+  # - `host`: the host address to bind to
+  # - `port`: the port to bind to (by default is `9898`)
   class Server
     enum Environment
       DEVELOPMENT

@@ -8,6 +8,16 @@ module Salt
     # Initialize with the Salt application that you want protecting,
     # and a block that checks if a username and password pair are valid.
     #
+    # ### Rules for resouces
+    #
+    # #### All paths
+    #
+    # By defaults, it sets `[]` for all paths
+    #
+    # #### A list of paths/files to protect.
+    #
+    # `["/admin", "/config/database.yaml"]`
+    #
     # ### Examples
     #
     # #### protect for all paths
@@ -16,10 +26,10 @@ module Salt
     # Salt.use Salt::Middlewares::BasicAuth, user: "foo", password: "bar"
     # ```
     #
-    # #### resources is a list of files/directories to protect
+    # #### resources is a list of files/paths to protect
     #
     # ```
-    # Salt.use Salt::Middlewares::BasicAuth, user: "foo", password: "bar", resources: ["/posts"]
+    # Salt.use Salt::Middlewares::BasicAuth, user: "foo", password: "bar", resources: ["/admin"]
     # ```
     class BasicAuth < App
       AUTH_STRING = "Authorization"

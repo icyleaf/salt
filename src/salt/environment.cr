@@ -2,6 +2,8 @@ require "./middlewares/session/abstract/session_hash"
 require "uri"
 
 module Salt
+  # `Salt::Environment` provides a convenient interface to a Salt environment.
+  # It is stateless, the environment **env** passed to the constructor will be directly modified.
   class Environment
     @request : HTTP::Request
     @response : HTTP::Server::Response
@@ -13,7 +15,7 @@ module Salt
 
     property? logger : ::Logger?
 
-    # Depend on `Salt::Middlewares::Logger` middleware
+    # Depend on `Salt::Logger` middleware
     def logger
       unless logger?
         raise Exceptions::NotFoundMiddleware.new("Missing Logger middleware, use Salt::run add it.")
@@ -24,7 +26,7 @@ module Salt
 
     property? session : Salt::Middlewares::Session::Abstract::SessionHash?
 
-    # Depend on `Salt::Middlewares::Session` middleware
+    # Depend on `Salt::Session` middleware
     def session
       unless session?
         raise Exceptions::NotFoundMiddleware.new("Missing Session middleware, use Salt::run add it.")
