@@ -45,6 +45,7 @@ module Salt
   alias File = Middlewares::File
   alias Directory = Middlewares::Directory
   alias ETag = Middlewares::ETag
+  alias BasicAuth = Middlewares::BasicAuth
 
   # Set alias of environment of server
 

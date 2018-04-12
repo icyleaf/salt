@@ -83,6 +83,7 @@ Salt.run Talk.new
   - [ ] Static
   - [ ] SendFile
   - [x] ETag
+  - [x] BasicAuth
   - [ ] Rails Flash (maybe)
 
 ## Contributing
