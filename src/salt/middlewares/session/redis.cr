@@ -3,7 +3,7 @@ require "redis"
 require "json"
 
 module Salt::Middlewares::Session
-  # Salt::Session::Redis provides simple cookie based session management.
+  # `Salt::Session::Redis` provides simple cookie based session management.
   # Session data was stored in redis. The corresponding session key is
   # maintained in the cookie.
   #
@@ -15,7 +15,7 @@ module Salt::Middlewares::Session
   # **Note that** redis does drop data before it may be listed to expire. For
   # a full description of behaviour, please see redis's documentation.
   #
-  # Example:
+  # ### Examples
   #
   # ```
   # use Salt::Session::Redis, server: "redis://localhost:6379/0",

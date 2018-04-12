@@ -3,7 +3,7 @@ module Salt
     @@middlewares = [] of Proc(App, App)
 
     def self.use(middleware_class, **options)
-      proc = ->(app : App) { middleware_class.new(app, **options).as(Salt::App) }
+      proc = ->(app : App) { middleware_class.new(app, **options).as(App) }
       @@middlewares << proc
     end
 

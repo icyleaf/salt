@@ -1,5 +1,5 @@
 module Salt::Middlewares
-  # Salt::Head returns an empty body for all HEAD requests.
+  # `Salt::Head` returns an empty body for all HEAD requests.
   # It leaves all other requests unchanged.
   class Head < App
     def call(env)

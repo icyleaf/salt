@@ -13,7 +13,7 @@ module Salt
 
     property? logger : ::Logger?
 
-    # Depend on `Salt::Middlewares::Logger` middleware
+    # Depend on `Salt::Logger` middleware
     def logger
       unless logger?
         raise Exceptions::NotFoundMiddleware.new("Missing Logger middleware, use Salt::run add it.")
@@ -24,7 +24,7 @@ module Salt
 
     property? session : Salt::Middlewares::Session::Abstract::SessionHash?
 
-    # Depend on `Salt::Middlewares::Session` middleware
+    # Depend on `Salt::Session` middleware
     def session
       unless session?
         raise Exceptions::NotFoundMiddleware.new("Missing Session middleware, use Salt::run add it.")

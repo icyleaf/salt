@@ -1,7 +1,7 @@
 require "ecr/macros"
 
 module Salt::Middlewares
-  # Salt::Middlewares::ShowExceptions catches all exceptions raised from the app it
+  # `Salt::ShowExceptions` catches all exceptions raised from the app it
   # wraps.
   # It shows a useful backtrace with the sourcefile and
   # clickable context, the whole Salt environment and the request
