@@ -18,14 +18,14 @@ module Salt::Middlewares
       puts dump_exception(e)
 
       body = pretty_body(env, e)
-      [
+      {
         500,
         {
           "Content-Type"   => "text/html",
           "Content-Length" => body.bytesize.to_s,
         },
         [body],
-      ]
+      }
     end
 
     private def dump_exception(exception)

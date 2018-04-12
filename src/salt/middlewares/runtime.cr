@@ -24,7 +24,7 @@ module Salt::Middlewares
         headers[@header_name] = elapsed
       end
 
-      [status_code, headers, body]
+      {status_code, headers, body}
     end
 
     private def elapsed(&block)

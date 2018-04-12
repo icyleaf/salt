@@ -33,7 +33,7 @@ module Salt::Middlewares::Session::Abstract
       call_app(env)
       commit_session(env)
 
-      [status_code, headers, body]
+      {status_code, headers, body}
     end
 
     def commit_session(env)

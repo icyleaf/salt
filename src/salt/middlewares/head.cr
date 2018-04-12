@@ -5,8 +5,7 @@ module Salt::Middlewares
     def call(env)
       call_app(env)
 
-      return_body = (env.method == "HEAD") ? [] of String : body
-      [status_code, headers, return_body]
+      {status_code, headers, (env.method == "HEAD") ? [] of String : body}
     end
   end
 end

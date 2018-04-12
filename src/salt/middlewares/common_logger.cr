@@ -12,10 +12,9 @@ module Salt::Middlewares
 
     def call(env)
       began_at = Time.now
-      call_app(env)
+      response = call_app(env)
       log(env, status_code, headers, began_at)
-
-      [status_code, headers, body]
+      response
     end
 
     private def log(env, status_code, headers, began_at)
