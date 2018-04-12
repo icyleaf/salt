@@ -34,7 +34,7 @@ class Talk < Salt::App
   def call(env)
     env.session.set("username", "icyleaf")
     env.logger.info("Start Talking!")
-    [400, { "Content-Type" => "text/plain" }, ["Can I talk to salt?"]]
+    {400, { "Content-Type" => "text/plain" }, ["Can I talk to salt?"]}
   end
 end
 
@@ -43,7 +43,7 @@ class Shout < Salt::App
     call_app(env)
 
     env.logger.debug("Shout class")
-    [status_code, headers, body.map &.upcase ]
+    {status_code, headers, body.map &.upcase }
   end
 end
 
@@ -52,7 +52,7 @@ class Speaking < Salt::App
     call_app(env)
 
     env.logger.debug("Speaking class")
-    [200, { "Content-Type" => "text/plain" }, ["This is Slat speaking! #{env.session.get("username")}"]]
+    {200, headers, ["This is Slat speaking! #{env.session.get("username")}"]}
   end
 end
 

@@ -51,11 +51,11 @@ module Salt::Middlewares
 
     private def serving(env, path)
       if env.options?
-        return [200, {"Allow" => ALLOW_HEADER, "Content-length" => "0"}, [] of String]
+        return {200, {"Allow" => ALLOW_HEADER, "Content-length" => "0"}, [] of String}
       end
 
       last_modified = HTTP.rfc1123_date(::File.stat(path).mtime)
-      return [304, {} of String => String, [] of String] if env.headers["HTTP_IF_MODIFIED_SINCE"]? == last_modified
+      return {304, {} of String => String, [] of String} if env.headers["HTTP_IF_MODIFIED_SINCE"]? == last_modified
 
       headers = {
         "Last-Modified"  => last_modified,
@@ -69,11 +69,11 @@ module Salt::Middlewares
         end
       end
 
-      [200, headers, [body.to_s]]
+      {200, headers, [body.to_s]}
     end
 
     private def fail(code : Int32, body : String, headers = {} of String => String)
-      [
+      {
         code,
         {
           "Content-Type"   => "text/plain; charset=utf-8",
@@ -81,7 +81,7 @@ module Salt::Middlewares
           "X-Cascade"      => "pass",
         }.merge(headers),
         [body],
-      ]
+      }
     end
 
     private def mime_type(path : String)

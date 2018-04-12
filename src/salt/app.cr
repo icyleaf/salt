@@ -2,7 +2,7 @@ require "http/server/handler"
 
 module Salt
   abstract class App
-    alias Response = Array(Int32 | Hash(String, String) | Array(String))
+    alias Response = {Int32, Hash(String, String), Array(String)}
 
     property status_code = 200
     property headers = {} of String => String
@@ -21,7 +21,7 @@ module Salt
         @body = response[2].as(Array(String))
       end
 
-      [@status_code, @headers, @body]
+      {@status_code, @headers, @body}
     end
   end
 end
