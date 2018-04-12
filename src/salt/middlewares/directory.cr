@@ -75,13 +75,13 @@ module Salt::Middlewares
         files << [file_url, file_name, file_size.to_s, file_type.to_s, stat.mtime.to_s]
       end
 
-      [
+      {
         200,
         {
           "Content-Type" => "text/html; charset=utf-8",
         },
         [pretty_body(path_info, files)],
-      ]
+      }
     end
 
     private def check_bad_request(path_info)
@@ -97,7 +97,7 @@ module Salt::Middlewares
     end
 
     private def fail(code : Int32, body : String, headers = {} of String => String)
-      [
+      {
         code,
         {
           "Content-Type"   => "text/plain; charset=utf-8",
@@ -105,7 +105,7 @@ module Salt::Middlewares
           "X-Cascade"      => "pass",
         }.merge(headers),
         [body],
-      ]
+      }
     end
 
     private def stat(node)
