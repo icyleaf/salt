@@ -82,7 +82,7 @@ Salt.run Talk.new
   - [x] Directory
   - [ ] Static
   - [ ] SendFile
-  - [ ] ETag
+  - [x] ETag
   - [ ] Rails Flash (maybe)
 
 ## Contributing
