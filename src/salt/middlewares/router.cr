@@ -14,7 +14,7 @@ module Salt
     #   end
     # end
     #
-    # Salt.use Salt::Router do |r|
+    # Salt.run Salt::Router do |r|
     #   r.get "/dashboard", to: Dashboard.new
     #   r.get "/helo" do |env|
     #     {200, {"Content-Type" => "text/plain"}, ["hello world"]}
@@ -35,11 +35,12 @@ module Salt
     # #### Strict way
     #
     # ```
-    # Salt.use Salt::Router, rules: -> (r : Salt::Router::Drawer) {
+    # Salt.run Salt::Router, rules: -> (r : Salt::Router::Drawer) {
     #   r.get "/hello" do |env|
     #     {200, {"Content-Type" => "text/plain"}, ["hello"]}
     #   end
     #
+    #  # Must return nil as Proc argument.
     #  nil
     # }
     # ```
@@ -168,20 +169,20 @@ module Salt
 
     end
 
-    # Only apply to `Salt::Router` middleware
+    # Hacks accepts block to run `Salt::Router` middleware
     def self.use(klass, **options, &block : Router::Drawer ->)
       proc = ->(app : App) { klass.new(app, **options, &block).as(App) }
       @@middlewares << proc
     end
   end
 
-  # Only apply to `Salt::Router` middleware
+  # Hacks accepts block to run `Salt::Router` middleware
   def self.use(middleware, **options, &block : Router::Drawer ->)
     Middlewares.use(middleware, **options, &block)
   end
 
-  # # Only apply to `Salt::Router` middleware
-  # def self.run(app : Salt::App, **options, &block : Router::Drawer ->)
-  #   Salt::Server.new(**options).run(app)
-  # end
+  # Hacks accepts block to run `Salt::Router` middleware
+  def self.run(app : Salt::App, **options, &block : Router::Drawer ->)
+    Salt::Server.new(**options).run(app)
+  end
 end
