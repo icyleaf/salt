@@ -24,8 +24,8 @@ module Salt
     #
     #   r.redirect "/home", to: "/dashboard", code: 302
     #
-    #   r.not_found enabled: true
-    #   # Or custom not found page
+    #   r.not_found
+    #   # Or custom not found page, also it accepts Proc and Salt::App as argument.
     #   r.not_found do |env|
     #     {404, {"Content-Type" => "application/json"}. [{"message" => "404 not found"}.to_json]}
     #   end
@@ -89,21 +89,50 @@ module Salt
 
         {% for name in METHODS %}
           {% method = name.id.downcase %}
+
+          # Define {{ name.id }} route with block
+          #
+          # ```
+          # Salt::Router.new do |draw|
+          #   draw.{{ method }} "/{{ method }}" do |env|
+          #     {200, { "Content-Type" => "text/plain"} , [] of String}
+          #   end
+          # end
+          # ```
           def {{ method }}(path : String, &block : Environment -> App::Response)
             {{ method }}(path, to: block)
           end
 
-          def {{ method }}(path : String, to block : Environment -> App::Response)
+          # Define {{ name.id }} route with `Proc(Salt::Environment, Salt::App::Response)` or `Salt::App`
+          #
+          # ```
+          # Salt::Router.new do |draw|
+          #   # Proc
+          #   draw.{{ method }} "/{{ method }}", to: -> (env : Salt::Environment) {
+          #     {200, { "Content-Type" => "text/plain"} , [] of String}
+          #   }
+          #
+          #   # Or use Salt::App
+          #   draw.{{ method }} "/{{ method }}", to: {{ method.id.capitalize }}App.new
+          # end
+          # ```
+          def {{ method }}(path : String, to block : (Environment -> App::Response) | Salt::App)
             response = block.call(@env)
-            @routes << Node.new({{ name.id.stringify }}, path, response)
-          end
-
-          def {{ method }}(path : String, to app : Salt::App)
-            response = app.call(@env)
             @routes << Node.new({{ name.id.stringify }}, path, response)
           end
         {% end %}
 
+        # Define redirect route
+        #
+        # By defaults is `302`
+        #
+        # ```
+        # Salt::Router.new do |draw|
+        #   draw.redirect "/source", to: "/destination", status_code: 301
+        #   # Or simple way as you like
+        #   draw.redirect "/source", "/destination", 301
+        # end
+        # ```
         def redirect(from : String, to : String, status_code = 302)
           method = "GET"
           if find(method, to)
@@ -112,32 +141,58 @@ module Salt
           end
         end
 
-        def not_found(enabled : Bool)
-          return unless enabled
-
-          body = "Not found"
-          response = {
-            404,
-            {
-              "Content-Type" => "text/plain",
-              "Content-Length" => body.bytesize.to_s
-            },
-            [body]
-          }
-
-          @routes << Node.new("ANY", "*", response)
+        # Support a default not found page
+        #
+        # ```
+        # Salt::Router.new do |draw|
+        #   # returns not found page directly
+        #   draw.not_found
+        #
+        #   # redirect to path and returns not found page
+        #   draw.not_found "/404"
+        # end
+        # ```
+        def not_found(redirect_to : String? = nil)
+          not_found(redirect_to) do |env|
+            body = "Not found"
+            response = {
+              404,
+              {
+                "Content-Type" => "text/plain",
+                "Content-Length" => body.bytesize.to_s
+              },
+              [body]
+            }
+          end
         end
 
+        # Define a custom not found page with block
+        #
+        # ```
+        # Salt::Router.new do |draw|
+        #   draw.not_found do |env|
+        #     {200, { "Content-Type" => "text/plain"} , [] of String}
+        #   end
+        # end
+        # ```
         def not_found(&block : Environment -> App::Response)
           not_found(to: block)
         end
 
-        def not_found(to block : Environment -> App::Response)
-          response = block.call(@env)
-          @routes << Node.new("ANY", "*", response)
-        end
-
-        def not_found(to app : Salt::App)
+        # Define a custom not found page witb Proc or `Salt::App`
+        #
+        # ```
+        # Salt::Router.new do |draw|
+        #   # Proc
+        #   draw.{{ method }} "/{{ method }}", to: -> (env : Salt::Environment) {
+        #     {200, { "Content-Type" => "text/plain"} , [] of String}
+        #   }
+        #
+        #   # Or use Salt::App
+        #   draw.{{ method }} "/{{ method }}", to: NotFoundApp.new
+        # end
+        # ```
+        def not_found(to block : (Environment -> App::Response) | Salt::App)
           response = block.call(@env)
           @routes << Node.new("ANY", "*", response)
         end
