@@ -2,9 +2,6 @@ require "http/server"
 require "logger"
 require "./ext/*"
 
-Signal::INT.trap { puts "\nCaught Ctrl+C and Goodbye."; exit }
-Signal::TERM.trap { puts "Caught kill"; exit }
-
 module Salt
   # A Salt Server.
   #
@@ -50,6 +47,9 @@ module Salt
     end
 
     def run_server
+      Signal::INT.trap { puts "\nCaught Ctrl+C and Goodbye."; exit }
+      Signal::TERM.trap { puts "Caught kill"; exit }
+
       HTTP::Server.new(
         @options["host"].as(String),
         @options["port"].as(Int32),
@@ -86,7 +86,6 @@ module Salt
         obj["environment"] = options.fetch(:environment, ENV["SALT_ENV"]? || "development")
         obj["host"] = options.fetch(:host, obj["environment"].to_s == "development" ? "localhost" : "0.0.0.0")
         obj["port"] = options.fetch(:port, 9898)
-        obj["debug"] = options.fetch(:debug, false)
 
         ENV["SALT_ENV"] = obj["environment"].to_s
       end
@@ -94,12 +93,18 @@ module Salt
 
     private def default_logger
       logger = ::Logger.new(STDOUT)
-      logger.progname = "salt"
+      logger.formatter = ::Logger::Formatter.new do |severity, datetime, progname, message, io|
+        io << "[" << Process.pid << "] " << message
+      end
+
       logger
     end
 
     private def display_info
-      @logger.info "HTTP::Server is start at http://#{@options["host"]}:#{@options["port"]}/"
+      @logger.info "Salt server starting ..."
+      @logger.info "* Version #{Salt::VERSION} (Crystal #{Crystal::VERSION})"
+      @logger.info "* Environment: #{@options["environment"]}"
+      @logger.info "* Listening on http://#{@options["host"]}:#{@options["port"]}/"
       @logger.info "Use Ctrl-C to stop"
     end
 
