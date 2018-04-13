@@ -64,27 +64,23 @@ Salt.use Speaking
 Salt.run Talk.new
 ```
 
-## TODO
+## Available middleware
 
-- [x] Web Server
-  - [x] request query params
-  - [x] request params in body
-  - [x] request files
-  - [x] get/set cookie
-- [ ] Middlewares
-  - [x] ShowExceptions
-  - [x] CommonLogger
-  - [x] Logger
-  - [x] Runtime
-  - [x] Session(Cookie/Redis)
-  - [x] Head
-  - [x] File
-  - [x] Directory
-  - [ ] Static
-  - [ ] SendFile
-  - [x] ETag
-  - [x] BasicAuth
-  - [ ] Rails Flash (maybe)
+- [x] `ShowExceptions`
+- [x] `CommonLogger`
+- [x] `Logger`
+- [x] `Runtime`
+- [x] `Session` (Cookie/Redis)
+- [x] `Head`
+- [x] `File`
+- [x] `Directory`
+- [ ] `Static`
+- [ ] `SendFile`
+- [x] `ETag`
+- [x] `BasicAuth`
+- [x] `Router` (lightweight)
+
+All these components use the same interface, which is described in detail in the Rack specification. These optional components can be used in any way you wish.
 
 ## Contributing
 
