@@ -73,18 +73,6 @@ module Salt
         end
       end
 
-      private def not_found(env)
-        body = "Not found"
-        {
-          404,
-          {
-            "Content-Type" => "text/plain",
-            "Content-Length" => body.bytesize.to_s
-          },
-          [body]
-        }
-      end
-
       class Drawer
         METHODS = %w(GET POST PUT DELETE PATCH HEAD OPTIONS)
 
