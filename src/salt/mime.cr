@@ -112,7 +112,8 @@ module Salt::Mime
   # Standard MIME types
   #
   # Source: https://github.com/broofa/node-mime/blob/master/types/standard.json
-  # version: v2.3.1
+  #
+  # Version: v2.3.1
   MIME_TYPES = {
     "application/andrew-inset" => ["ez"],
     "application/applixware" => ["aw"],
