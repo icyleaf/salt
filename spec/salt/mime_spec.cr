@@ -43,6 +43,7 @@ describe Salt::Mime do
   describe "#extension" do
     it "should returns if matched" do
       Salt::Mime.extension("application/zip").should eq "zip"
+      Salt::Mime.extension("application/xml, charset=utf-8").should eq "xml"
     end
 
     it "should returns nil if not matched" do
