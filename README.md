@@ -80,7 +80,7 @@ Salt.run Talk.new
 - [x] `BasicAuth`
 - [x] `Router` (lightweight)
 
-All these components use the same interface, which is described in detail in the Rack specification. These optional components can be used in any way you wish.
+All these components use the same interface, which is described in detail in the Salt::App specification. These optional components can be used in any way you wish.
 
 ## Contributing
 
