@@ -62,6 +62,13 @@ module Salt::Mime
   end
 
   # Get the default charset for a MIME type.
+  #
+  # ### Example
+  #
+  # ```
+  # Salt::Mime.charset("application/html") # => "utf-8"
+  # Salt::Mime.charset("application/html, charset=gbk-2312") # => "gbk-2312"
+  # ```
   def charset(content_type : String) : String
     return DEFAULT_CHARSET if content_type.empty?
 
@@ -75,6 +82,7 @@ module Salt::Mime
     charset
   end
 
+  # :nodoc:
   private def charset?(content_type : String)
     content_type.downcase.includes?("charset")
   end
