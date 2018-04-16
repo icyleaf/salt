@@ -1,5 +1,3 @@
-require "mime"
-
 module Salt::Middlewares
   # `Salt::File` serves files below the **root** directory given, according to the
   # path info of the Salt request.
@@ -85,8 +83,7 @@ module Salt::Middlewares
     end
 
     private def mime_type(path : String)
-      mime = Mime.from_ext(::File.extname(path)[1..-1])
-      mime ? mime : @default_mime
+      Mime.lookup(path, @default_mime)
     end
   end
 end
