@@ -18,6 +18,7 @@ module Salt::Middlewares::Session
   # ### Examples
   #
   # ```
+  # # Add "stefanwille/crystal-redis" to your shards.yml.
   # use Salt::Session::Redis, server: "redis://localhost:6379/0",
   #   namspace: "salt:session"
   # ```
