@@ -15,7 +15,7 @@ module Salt::Mime
   def lookup(path : String, default_type : String? = nil) : String?
     return if path.empty?
 
-    extension = ::File.extname("x.#{path}").downcase.strip('.')
+    extension = ::File.extname("salt.#{path}").downcase.strip('.')
     return if extension.empty?
 
     if !(content_type = stores.types[extension]?) && (default = default_type)
