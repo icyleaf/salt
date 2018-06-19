@@ -59,7 +59,7 @@ module Salt::Middlewares
       url_path.delete_at(-1)
 
       Dir[glob_path].sort.each do |node|
-        next unless stat = stat(node)
+        next unless stat = info(node)
 
         file_name = ::File.basename(node)
         next if file_name.starts_with?(".")
@@ -72,7 +72,7 @@ module Salt::Middlewares
         file_type = stat.directory? ? "Directory" : "File"
         file_size = stat.directory? ? "-" : filesize_format(stat.size)
 
-        files << [file_url, file_name, file_size.to_s, file_type.to_s, stat.mtime.to_s]
+        files << [file_url, file_name, file_size.to_s, file_type.to_s, stat.modification_time.to_s]
       end
 
       {
@@ -108,8 +108,8 @@ module Salt::Middlewares
       }
     end
 
-    private def stat(node)
-      ::File.stat(node)
+    private def info(node)
+      ::File.info(node)
     rescue Errno
       return nil
     end

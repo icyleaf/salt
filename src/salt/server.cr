@@ -50,11 +50,11 @@ module Salt
       Signal::INT.trap { puts "\nCaught Ctrl+C and Goodbye."; exit }
       Signal::TERM.trap { puts "Caught kill"; exit }
 
-      HTTP::Server.new(
-        @options["host"].as(String),
-        @options["port"].as(Int32),
-        [handler]
-      ).listen(reuse_port: false)
+      HTTP::Server.new(handlers: [handler]).listen(
+        host: @options["host"].as(String),
+        port: @options["port"].as(Int32),
+        reuse_port: false
+      )
     end
 
     private def handler

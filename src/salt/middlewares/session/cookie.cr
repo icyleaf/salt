@@ -42,7 +42,7 @@ module Salt::Middlewares::Session
 
       protected def stringify_hash(data)
         hash = Hash(String, String).new
-        data.each do |key, value|
+        data.as_h.each do |key, value|
           hash[key.to_s] = value.to_s
         end
         hash
@@ -103,15 +103,17 @@ module Salt::Middlewares::Session
       @hmac = options.fetch(:hmac, :sha1).as(Symbol)
       @coder = options.fetch(:coder, Base64::ZipJSON.new).as(Base64)
 
-      puts <<-MSG
-      SECURITY WARNING: No secret option provided to Salt::Middlewares::Session::Cookie.
-      This poses a security threat. It is strongly recommended that you
-      provide a secret to prevent exploits that may be possible from crafted
-      cookies. This will not be supported in future versions of Salt, and
-      future versions will even invalidate your existing user cookies.
+      unless secure?(options)
+        puts <<-MSG
+          SECURITY WARNING: No secret option provided to Salt::Middlewares::Session::Cookie.
+          This poses a security threat. It is strongly recommended that you
+          provide a secret to prevent exploits that may be possible from crafted
+          cookies. This will not be supported in future versions of Salt, and
+          future versions will even invalidate your existing user cookies.
 
-      Called from: #{caller[0]}.
-      MSG unless secure?(options)
+          Called from: #{caller[0]}.
+          MSG
+      end
 
       super(@app, **options)
     end

@@ -52,7 +52,7 @@ module Salt::Middlewares
         return {200, {"Allow" => ALLOW_HEADER, "Content-length" => "0"}, [] of String}
       end
 
-      last_modified = HTTP.rfc1123_date(::File.stat(path).mtime)
+      last_modified = HTTP.format_time(::File.info(path).modification_time)
       return {304, {} of String => String, [] of String} if env.headers["HTTP_IF_MODIFIED_SINCE"]? == last_modified
 
       headers = {
