@@ -20,7 +20,6 @@ module Salt
 
       def initialize(@app : App? = nil, root : String = ".",
                     @headers = {} of String => String, @default_mime = "text/plain")
-        super(@app)
         @root = ::File.expand_path(root)
       end
 
@@ -28,7 +27,11 @@ module Salt
         get(env)
       end
 
-      private def get(env)
+      def call(env, status_code : Int32)
+        get(env, status_code)
+      end
+
+      private def get(env, status_code = 200)
         unless ALLOWED_VERBS.includes?(env.method)
           return fail(405, "Method Not Allowed", {"Allow" => ALLOW_HEADER})
         end
@@ -44,13 +47,13 @@ module Salt
         end
 
         if available
-          serving(env, path)
+          serving(env, path, status_code)
         else
           fail(404, "File not found: #{path_info}")
         end
       end
 
-      private def serving(env, path)
+      private def serving(env, path, status_code)
         if env.options?
           return {200, {"Allow" => ALLOW_HEADER, "Content-length" => "0"}, [] of String}
         end
@@ -70,7 +73,7 @@ module Salt
           end
         end
 
-        {200, headers, [body.to_s]}
+        {status_code, headers, [body.to_s]}
       end
 
       private def fail(code : Int32, body : String, headers = {} of String => String)

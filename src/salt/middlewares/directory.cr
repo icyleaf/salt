@@ -19,9 +19,7 @@ module Salt
     class Directory < App
       def initialize(app : App? = nil, root : String = ".")
         @root = ::File.expand_path(root)
-        app = app || Salt::Middlewares::File.new(root: root)
-
-        super(app)
+        app = app || Salt::Middlewares::File.new(root: @root)
       end
 
       def call(env)

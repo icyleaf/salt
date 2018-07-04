@@ -60,8 +60,8 @@ class Speaking < Salt::App
   end
 end
 
-Salt.use Salt::Middlewares::Session::Cookie, secret: "<change me>"
-Salt.use Salt::Middlewares::Logger, level: Logger::DEBUG, progname: "app"
+Salt.use Salt::Session::Cookie, secret: "<change me>"
+Salt.use Salt::Logger, level: Logger::DEBUG, progname: "app"
 Salt.use Shout
 Salt.use Speaking
 

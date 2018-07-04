@@ -38,9 +38,13 @@ module Salt
     delegate version, to: @request
     delegate headers, to: @request
 
-    module URI
+    module URL
       delegate path, to: @request
       delegate query, to: @request
+
+      def path=(path)
+        @request.path = path
+      end
 
       def url
         url = "#{base_url}#{full_path}"
@@ -53,7 +57,8 @@ module Salt
       end
 
       def full_path
-        query ? "#{path}?#{query.not_nil!}" : path
+        uri.full_path
+        # query ? "#{path}?#{query.not_nil!}" : path
       end
 
       def fragment
@@ -91,10 +96,10 @@ module Salt
         uri.port
       end
 
-      @uri : ::URI?
+      @uri : URI?
 
       private def uri
-        (@uri ||= ::URI.parse(@context.request.resource)).not_nil!
+        (@uri ||= URI.parse(@context.request.resource)).not_nil!
       end
     end
 
@@ -209,7 +214,7 @@ module Salt
       end
     end
 
-    include URI
+    include URL
     include Methods
     include Params
     include Cookies
