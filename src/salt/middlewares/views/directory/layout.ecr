@@ -6,7 +6,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <style type='text/css'>
     /*------------------------------------------------------------------*\
-      CSS Style Copy from https://github.com/barrowclift/directory-theme
+      CSS style inspired from Github Repository Style and https://github.com/barrowclift/directory-theme
     \*------------------------------------------------------------------*/
     * {
       margin:0;
@@ -22,6 +22,7 @@
       font-size:1em;
       font-family:system, -apple-system, ".SFNSDisplay-Regular", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
       line-height:2em;
+      color:#61666C;
     }
     body {
       padding:20px;
@@ -29,11 +30,11 @@
       -webkit-backface-visibility:hidden;
     }
     a {
-      color:#61666c;
+      color:#61666C;
       text-decoration:none;
     }
     a:hover {
-      color:#2a2a2a;
+      color:#2A2A2A;
     }
     h1 {
       font-weight:200;
@@ -43,7 +44,7 @@
       font-family:'Museo Slab','Open Sans',monospace;
     }
     a.clear, a.clear:link, a.clear:visited {
-      color:#666;
+      color: #666666;
       padding:2px 0 2px 0;
       font-weight: 400;
       font-size: 14px;
@@ -60,54 +61,31 @@
     }
     a.clear:hover {
       text-decoration: none;
-      color:#333;
+      color:#333333;
       cursor: pointer;
     }
     table {
+      border: 1px solid #dfe2e5;
+      border-bottom: 0;
       border-collapse:collapse;
       font-size:1em;
       width:100%;
-      margin:20px auto 0px auto;
+      margin:5px auto 0px auto;
     }
     tr {
       outline:0;
       border:0;
     }
     tr:hover td {
-      background:#B2D7FF;
+      background:#F6F8FA;
     }
-    th {
-      text-align:left;
-      font-size:1em;
-      padding-right:20px;
-    }
-    th.name {
-      width:65%;
-    }
-    th.size {
-      width:10%;
-      padding-left:0px;
-      padding-right:0px;
-      min-width:100px;
-    }
-    th.type {
-      width:10%;
-    }
-    th.mtime {
-      width:20%;
-    }
-    tr td:first-of-type {
-      padding-left:10px;
-      padding-right:10px;
-    }
-    th:first-of-type {
-      padding-left:10px;
+    tr.parent {
     }
     td {
       padding:5px 0;
       outline:0;
       border:0;
-      border-bottom:1px solid #edf1f5;
+      border-bottom:1px solid #EDF1F5;
       vertical-align:middle;
       text-align:left;
       -webkit-transition:background 300ms ease-in;
@@ -116,36 +94,43 @@
       -o-transition:background 300ms ease-in;
       transition:background 300ms ease-in;
     }
-    td:last-child, th:last-child {
-      text-align:right;
-      min-width:150px;
+    td.icon {
+      width: 17px;
+      fill: #032f628c;
     }
-    th:last-child {
-      padding-right:5px;
+    td.icon .octicon {
+      vertical-align: text-bottom;
     }
-    td:last-child {
+    td.name {
+      max-width: 300px;
+    }
+    td.name a:hover {
+      text-decoration:underline;
+    }
+    td.size {
+      width: 125px;
+      white-space: nowrap;
+    }
+    td.mtime {
+      width: 125px;
+      text-align: right;
+      white-space: nowrap;
+    }
+    tr td:first-of-type {
+      padding-left:10px;
       padding-right:10px;
-    }
-    td a{
-      display: block;
     }
   </style>
 </head>
 <body>
 <h1><%= root %></h1>
 <table>
-  <tr>
-    <th class='name'>Name</th>
-    <th class='size'>Size</th>
-    <th class='type'>Type</th>
-    <th class='mtime'>Last Modified</th>
-  </tr>
   <% files.each do |file| %>
-  <tr>
-    <td class="name"><a href="<%= file[0] %>"><%= file[1] %></a></td>
-    <td class="size"><div><%= file[2] %></div></td>
-    <td class="type"><div><%= file[3] %></div></td>
-    <td class="mtime"><div><%= file[4] %></div></td>
+  <tr<% if file[0] == "../" %> class="parent"<% end %>>
+    <td class="icon"><%= file[0] %></td>
+    <td class="name"><a href="<%= file[2] %>"><%= file[1] %></a></td>
+    <td class="size"><%= file[3] %></td>
+    <td class="mtime"><%= file[4] %></td>
   </tr>
   <% end %>
 </table>

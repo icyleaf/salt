@@ -36,48 +36,39 @@ module Salt
       end
 
       private def list_path(env, path_info)
-        path = ::File.join(@root, path_info)
-        if ::File.readable?(path)
-          if ::File.file?(path)
+        real_path = ::File.join(@root, path_info)
+        if ::File.readable?(real_path)
+          if ::File.file?(real_path)
             @app.not_nil!.call(env)
           else
-            list_directory(path_info, path)
+            list_directory(path_info, real_path)
           end
         else
           fail(404, "No such file or directory")
         end
       end
 
-      private def list_directory(path_info, path)
-        files = if path_info == "/"
-                  # Hide link in top index
-                  [] of Array(String)
-                else
-                  [["../", "Parent Directory", "-", "Directory", "-"]]
-                end
+      private def list_directory(path_info, real_path)
+        files = load_files(path_info)
 
-        glob_path = ::File.join(path, "*")
-        url_path = path_info.split("/").map do |part|
-          URI.escape(part)
+        glob_path = ::File.join(real_path, "*")
+        path = URI.escape(path_info) do |byte|
+          URI.unreserved?(byte) || byte.chr == '/'
         end
-        # Hacks to remove the last empty string to apply in url path with File.join
-        url_path.delete_at(-1)
 
         Dir[glob_path].sort.each do |node|
           next unless stat = info(node)
 
-          file_name = ::File.basename(node)
-          next if file_name.starts_with?(".")
+          name = ::File.basename(node)
+          next if name.starts_with?(".")
 
-          file_url = ::File.join(url_path + [URI.escape(file_name)])
-          if stat.directory?
-            file_url += "/"
-            file_name += "/"
-          end
-          file_type = stat.directory? ? "Directory" : "File"
-          file_size = stat.directory? ? "-" : filesize_format(stat.size)
+          url = ::File.join(path + URI.escape(name))
+          url += "/" if stat.directory?
+          name += "/" if stat.directory?
+          icon = stat.directory? ? directory_icon : file_icon
+          size = stat.directory? ? "" : filesize_format(stat.size)
 
-          files << [file_url, file_name, file_size.to_s, file_type.to_s, stat.modification_time.to_s]
+          files << [icon, name, url, size.to_s, stat.modification_time.to_local.to_s]
         end
 
         {
@@ -111,6 +102,26 @@ module Salt
           }.merge(headers),
           [body],
         }
+      end
+
+      private def load_files(path_info)
+        if path_info == "/"
+          [] of Array(String)
+        else
+          [["", "..", "../", "", ""]]
+        end
+      end
+
+      private def directory_icon
+        <<-HTML
+        <svg class="octicon octicon-file-directory" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13 4H7V3c0-.66-.31-1-1-1H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zM6 4H1V3h5v1z"></path></svg>
+        HTML
+      end
+
+      private def file_icon
+        <<-HTML
+        <svg class="octicon octicon-file" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6 5H2V4h4v1zM2 8h7V7H2v1zm0 2h7V9H2v1zm0 2h7v-1H2v1zm10-7.5V14c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V2c0-.55.45-1 1-1h7.5L12 4.5zM11 5L8 2H1v12h10V5z"></path></svg>
+        HTML
       end
 
       private def info(node)
