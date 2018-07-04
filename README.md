@@ -30,6 +30,10 @@ dependencies:
 ## Usage
 
 ```crystal
+require "salt"
+require "salt/middlewares/session/cookie"
+require "salt/middlewares/logger"
+
 class Talk < Salt::App
   def call(env)
     env.session.set("username", "icyleaf")
@@ -56,8 +60,8 @@ class Speaking < Salt::App
   end
 end
 
-Salt.use Salt::Session::Cookie, secret: "<change me>"
-Salt.use Salt::Logger, level: Logger::DEBUG, progname: "app"
+Salt.use Salt::Middlewares::Session::Cookie, secret: "<change me>"
+Salt.use Salt::Middlewares::Logger, level: Logger::DEBUG, progname: "app"
 Salt.use Shout
 Salt.use Speaking
 

@@ -1,3 +1,5 @@
+require "./file"
+
 module Salt::Middlewares
   # `Salt::Directory` serves entries below the **root** given, according to the
   # path info of the Salt request. If a directory is found, the file's contents

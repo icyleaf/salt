@@ -20,5 +20,3 @@ module Salt
     end
   end
 end
-
-require "./middlewares/**"

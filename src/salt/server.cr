@@ -1,6 +1,8 @@
 require "http/server"
 require "logger"
 require "./ext/*"
+require "./middlewares/common_logger"
+require "./middlewares/show_exceptions"
 
 module Salt
   # A Salt Server.

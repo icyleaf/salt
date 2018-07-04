@@ -4,31 +4,31 @@ describe Salt do
   describe "#alias class" do
     context "Runtime" do
       it "should alias Salt::Middlewares::Runtime" do
-        Salt::Runtime.should be_a Salt::Middlewares::Runtime.class
+        Salt::Middlewares::Runtime.should be_a Salt::Middlewares::Runtime.class
       end
     end
 
     context "Logger" do
       it "should alias Salt::Middlewares::Logger" do
-        Salt::Logger.should be_a Salt::Middlewares::Logger.class
+        Salt::Middlewares::Logger.should be_a Salt::Middlewares::Logger.class
       end
     end
 
     context "CommonLogger" do
       it "should alias Salt::Middlewares::Runtime" do
-        Salt::CommonLogger.should be_a Salt::Middlewares::CommonLogger.class
+        Salt::Middlewares::CommonLogger.should be_a Salt::Middlewares::CommonLogger.class
       end
     end
 
     context "ShowExceptions" do
       it "should alias Salt::Middlewares::Runtime" do
-        Salt::ShowExceptions.should be_a Salt::Middlewares::ShowExceptions.class
+        Salt::Middlewares::ShowExceptions.should be_a Salt::Middlewares::ShowExceptions.class
       end
     end
 
     context "Session::Cookie" do
       it "should alias Salt::Middlewares::Runtime" do
-        Salt::Session::Cookie.should be_a Salt::Middlewares::Session::Cookie.class
+        Salt::Middlewares::Session::Cookie.should be_a Salt::Middlewares::Session::Cookie.class
       end
     end
   end

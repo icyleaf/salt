@@ -34,20 +34,6 @@ module Salt
     Salt::Middlewares.use(middleware, **options)
   end
 
-  # Set alias of middlewares
-
-  alias Runtime = Middlewares::Runtime
-  alias Logger = Middlewares::Logger
-  alias CommonLogger = Middlewares::CommonLogger
-  alias ShowExceptions = Middlewares::ShowExceptions
-  alias Session = Middlewares::Session
-  alias Head = Middlewares::Head
-  alias File = Middlewares::File
-  alias Directory = Middlewares::Directory
-  alias ETag = Middlewares::ETag
-  alias BasicAuth = Middlewares::BasicAuth
-  alias Router = Middlewares::Router
-
   # Set alias of environment of server
 
   {% for name in Server::Environment.constants %}
