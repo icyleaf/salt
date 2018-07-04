@@ -1,4 +1,5 @@
 require "./abstract/*"
+require "../session"
 
 require "openssl/hmac"
 require "base64"

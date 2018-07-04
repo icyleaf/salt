@@ -39,11 +39,11 @@ module Salt
     def default_middlewares
       @middlewares ||= {
         "development" => [
-          Salt::Middlewares::CommonLogger.as(Salt::App.class),
-          Salt::Middlewares::ShowExceptions.as(Salt::App.class),
+          Salt::CommonLogger.as(Salt::App.class),
+          Salt::ShowExceptions.as(Salt::App.class),
         ],
         "deployment" => [
-          Salt::Middlewares::CommonLogger.as(Salt::App.class),
+          Salt::CommonLogger.as(Salt::App.class),
         ],
       }.as(Hash(String, Array(Salt::App.class)))
     end

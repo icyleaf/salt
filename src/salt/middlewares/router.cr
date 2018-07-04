@@ -1,4 +1,6 @@
 module Salt
+  alias Router = Middlewares::Router
+
   module Middlewares
     # `Salt::Router` is a lightweight HTTP Router.
     #

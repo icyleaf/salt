@@ -2,6 +2,8 @@ require "crypto/subtle"
 require "base64"
 
 module Salt
+  alias BasicAuth = Middlewares::BasicAuth
+
   module Middlewares
     # `Salt::BasicAuth` implements HTTP Basic Authentication, as per RFC 2617.
     #

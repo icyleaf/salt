@@ -1,4 +1,6 @@
 require "./abstract/*"
+require "../session"
+
 require "redis"
 require "json"
 
