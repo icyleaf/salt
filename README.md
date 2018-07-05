@@ -78,7 +78,7 @@ Salt.run Talk.new
 - [x] `Head`
 - [x] `File`
 - [x] `Directory`
-- [ ] `Static`
+- [x] `Static`
 - [ ] `SendFile`
 - [x] `ETag`
 - [x] `BasicAuth`
