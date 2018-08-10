@@ -16,7 +16,7 @@ module Salt
     #   end
     # end
     #
-    # Salt.run Salt::Router do |r|
+    # Salt.run Salt::Router.new do |r|
     #   r.get "/dashboard", to: Dashboard.new
     #   r.get "/helo" do |env|
     #     {200, {"Content-Type" => "text/plain"}, ["hello world"]}
