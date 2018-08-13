@@ -2,6 +2,7 @@ require "./file"
 
 module Salt
   alias Static = Middlewares::Static
+
   module Middlewares
     # `Salt::Static` middleware intercepts requests for static files
     # (javascript files, images, stylesheets, etc) based on the url prefixes or

@@ -19,8 +19,9 @@ module Salt::Middlewares::Session
   #
   # ### Examples
   #
+  # It Dependency [crystal-redis](https://github.com/stefanwille/crystal-redis), you need add to `shard.yml` and install first.
+  #
   # ```
-  # # Add "stefanwille/crystal-redis" to your shards.yml.
   # use Salt::Session::Redis, server: "redis://localhost:6379/0",
   #   namspace: "salt:session"
   # ```

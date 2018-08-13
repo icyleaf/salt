@@ -12,8 +12,8 @@ module Salt
     # ```
     class Logger < App
       def initialize(@app : App, @io : IO = STDOUT, @progname = "salt",
-                    @level : ::Logger::Severity = ::Logger::INFO,
-                    @formatter : ::Logger::Formatter? = nil)
+                     @level : ::Logger::Severity = ::Logger::INFO,
+                     @formatter : ::Logger::Formatter? = nil)
       end
 
       def call(env)

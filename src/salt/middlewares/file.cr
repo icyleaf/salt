@@ -19,7 +19,7 @@ module Salt
       ALLOW_HEADER  = ALLOWED_VERBS.join(", ")
 
       def initialize(@app : App? = nil, root : String = ".",
-                    @headers = {} of String => String, @default_mime = "text/plain")
+                     @headers = {} of String => String, @default_mime = "text/plain")
         @root = ::File.expand_path(root)
       end
 

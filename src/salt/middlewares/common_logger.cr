@@ -12,7 +12,6 @@ module Salt
     #
     # ```
     # Salt.use Salt::CommonLogger
-    #
     # ```
     #
     # #### Use custom logger

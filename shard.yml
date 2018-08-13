@@ -4,6 +4,11 @@ version: 0.4.1
 authors:
   - icyleaf <icyleaf.cn@gmail.com>
 
+dependencies:
+  mime:
+    github: icyleaf/mime.cr
+    version: ~> 0.1.0
+
 development_dependencies:
   radix:
     github: luislavena/radix

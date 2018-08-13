@@ -1,3 +1,5 @@
+require "mime"
+
 module Salt
   # `Salt::Middlewares` manages all about middlewares.
   module Middlewares
