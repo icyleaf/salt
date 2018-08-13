@@ -1,14 +1,17 @@
+require "radix"
+
 module Salt
   alias Router = Middlewares::Router
 
   module Middlewares
     # `Salt::Router` is a lightweight HTTP Router.
     #
-    #  **This middleware still in early stage**
-    #
     # ### Example
     #
+    # It Dependency [radix](https://github.com/luislavena/radix), you need add to `shard.yml` and install first.
+    #
     # #### Graceful way
+    #
     # ```
     # class Dashboard < Salt::App
     #   def call(env)
@@ -37,16 +40,18 @@ module Salt
     # #### Strict way
     #
     # ```
-    # Salt.run Salt::Router, rules: -> (r : Salt::Router::Drawer) {
+    # Salt.run Salt::Router, rules: ->(r : Salt::Router::Drawer) {
     #   r.get "/hello" do |env|
     #     {200, {"Content-Type" => "text/plain"}, ["hello"]}
     #   end
     #
-    #  # Must return nil as Proc argument.
-    #  nil
+    #   # Must return nil as Proc argument.
+    #   nil
     # }
     # ```
     class Router < App
+      alias Action = Environment -> Response
+
       def self.new(app : App? = nil, &rules : Drawer ->)
         new(app, rules: rules)
       end
@@ -63,10 +68,10 @@ module Salt
       end
 
       private def draw(env)
-        return unless routes = @rules
+        return unless rules = @rules
 
         drawer = Drawer.new(env)
-        routes.call(drawer)
+        rules.call(drawer)
 
         if response = drawer.find(env.method, env.path)
           response
@@ -78,14 +83,21 @@ module Salt
       class Drawer
         METHODS = %w(GET POST PUT DELETE PATCH HEAD OPTIONS)
 
-        @routes = [] of Node
+        @tree = Radix::Tree(Action).new # [] of Node
 
         def initialize(@env : Environment)
         end
 
         def find(method : String, path : String)
-          each do |node|
-            return node.response if method == node.method && path == node.path
+          r = @tree.find("/#{method}#{path}")
+
+          if r.found?
+            response = r.payload
+            r.params.each do |key, value|
+              @env.params.add(key, value)
+            end
+
+            response.call(@env)
           end
         end
 
@@ -101,7 +113,7 @@ module Salt
           #   end
           # end
           # ```
-          def {{ method }}(path : String, &block : Environment -> App::Response)
+          def {{ method }}(path : String, &block : Action)
             {{ method }}(path, to: block)
           end
 
@@ -118,9 +130,8 @@ module Salt
           #   draw.{{ method }} "/{{ method }}", to: {{ method.id.capitalize }}App.new
           # end
           # ```
-          def {{ method }}(path : String, to block : (Environment -> App::Response) | Salt::App)
-            response = block.call(@env)
-            @routes << Node.new({{ name.id.stringify }}, path, response)
+          def {{ method }}(path : String, to block : Action | Salt::App | App::Response)
+            @tree.add(radix_path({{ name.id.upcase.stringify }}, path), action_with(block))
           end
         {% end %}
 
@@ -138,8 +149,8 @@ module Salt
         def redirect(from : String, to : String, status_code = 302)
           method = "GET"
           if find(method, to)
-            response = {status_code, {"Location" => to}, [] of String}
-            @routes << Node.new(method, from, response)
+            response = {status_code, {"Location" => to}, [] of String}.as(App::Response)
+            @tree.add(radix_path(method, from), action_with(response))
           end
         end
 
@@ -149,21 +160,18 @@ module Salt
         # Salt::Router.new do |draw|
         #   # returns not found page directly
         #   draw.not_found
-        #
-        #   # redirect to path and returns not found page
-        #   draw.not_found "/404"
         # end
         # ```
-        def not_found(redirect_to : String? = nil)
-          not_found(redirect_to) do |env|
+        def not_found
+          not_found do |env|
             body = "Not found"
-            response = {
+            {
               404,
               {
-                "Content-Type" => "text/plain",
-                "Content-Length" => body.bytesize.to_s
+                "Content-Type"   => "text/plain",
+                "Content-Length" => body.bytesize.to_s,
               },
-              [body]
+              [body],
             }
           end
         end
@@ -173,11 +181,11 @@ module Salt
         # ```
         # Salt::Router.new do |draw|
         #   draw.not_found do |env|
-        #     {200, { "Content-Type" => "text/plain"} , [] of String}
+        #     {200, {"Content-Type" => "text/plain"}, [] of String}
         #   end
         # end
         # ```
-        def not_found(&block : Environment -> App::Response)
+        def not_found(&block : Action)
           not_found(to: block)
         end
 
@@ -194,24 +202,31 @@ module Salt
         #   draw.{{ method }} "/{{ method }}", to: NotFoundApp.new
         # end
         # ```
-        def not_found(to block : (Environment -> App::Response) | Salt::App)
-          response = block.call(@env)
-          @routes << Node.new("ANY", "*", response)
+        def not_found(to block : Action | Salt::App | App::Response)
+          @tree.add(radix_path("ANY", "/404"), action_with(block))
         end
 
         def try_not_found
-          find("ANY", "*")
+          find("ANY", "/404")
         end
 
-        def each
-          @routes.each do |node|
-            yield node
+        private def action_with(response : Action | Salt::App | App::Response) : Action
+          case response
+          when Action
+            response.as(Action)
+          when Salt::App
+            ->(env : Environment) { response.as(Salt::App).call(env).as(App::Response) }
+          when App::Response
+            ->(env : Environment) { response.as(App::Response) }
+          else
+            raise "Not match response. it must be Action, Salt::App or App::Response"
           end
         end
 
-        record Node, method : String, path : String, response : App::Response
+        private def radix_path(method, path)
+          "/#{method.upcase}#{path}"
+        end
       end
-
     end
 
     # Hacks accepts block to run `Salt::Router` middleware

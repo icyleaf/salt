@@ -5,10 +5,13 @@ authors:
   - icyleaf <icyleaf.cn@gmail.com>
 
 development_dependencies:
+  radix:
+    github: luislavena/radix
+    version: ~> 0.3.8
   redis:
     github: stefanwille/crystal-redis
     version: ~> 1.11.0
 
-crystal: 0.25.0
+crystal: 0.25.1
 
 license: MIT
