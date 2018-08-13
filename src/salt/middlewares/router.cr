@@ -21,8 +21,8 @@ module Salt
     #
     # Salt.run Salt::Router.new do |r|
     #   r.get "/dashboard", to: Dashboard.new
-    #   r.get "/helo" do |env|
-    #     {200, {"Content-Type" => "text/plain"}, ["hello world"]}
+    #   r.get "/users/:id" do |env|
+    #     {200, {"Content-Type" => "text/plain"}, ["hello user #{env.params["id"]}"]}
     #   end
     #
     #   r.post "/post", to: -> (env : Salt::Environment) { {200, {"Content-Type" => "text/plain"}, ["post success"] }
