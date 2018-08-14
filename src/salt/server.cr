@@ -16,13 +16,6 @@ module Salt
   # - `host`: the host address to bind to
   # - `port`: the port to bind to (by default is `9898`)
   class Server
-    enum Environment
-      DEVELOPMENT
-      PRODUCTION
-      STAG
-      TEST
-    end
-
     property logger : ::Logger
     property options : Hash(String, String | Int32 | Bool)
 
