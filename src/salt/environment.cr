@@ -1,16 +1,19 @@
 require "./middlewares/session/abstract/session_hash"
 require "uri"
+require "tempfile"
 
 module Salt
   # `Salt::Environment` provides a convenient interface to a Salt environment.
   # It is stateless, the environment **env** passed to the constructor will be directly modified.
-  class Environment
+  struct Environment
     @request : HTTP::Request
     @response : HTTP::Server::Response
 
     def initialize(@context : HTTP::Server::Context)
       @request = @context.request
       @response = @context.response
+
+      parse_params
     end
 
     property? logger : ::Logger?
@@ -39,41 +42,42 @@ module Salt
     delegate headers, to: @request
 
     module URL
+      delegate full_path, to: @request
       delegate path, to: @request
       delegate query, to: @request
 
-      def path=(path)
-        @request.path = path
+      def path=(value)
+        @request.path = value
       end
 
-      def url
-        url = "#{base_url}#{full_path}"
-        url += "##{fragment}" if fragment
-        url
+      def query=(value)
+        @request.query = value
       end
 
-      def base_url
-        "#{scheme}://#{host_with_port}"
+      def url : String
+        String.build do |io|
+          io << base_url << full_path
+        end
       end
 
-      def full_path
+      def base_url : String?
+        host_with_port  ? "#{scheme}://#{host_with_port}" : nil
+      end
+
+      def full_path : String
         uri.full_path
         # query ? "#{path}?#{query.not_nil!}" : path
       end
 
-      def fragment
-        uri.fragment
-      end
-
-      def scheme
+      def scheme : String
         uri.scheme || "http"
       end
 
-      def ssl?
+      def ssl? : Bool
         scheme == "https"
       end
 
-      def host
+      def host : String?
         if host = @request.host
           return host
         end
@@ -81,19 +85,23 @@ module Salt
         uri.host
       end
 
-      def host_with_port
+      def host_with_port : String?
         if host_with_port = @request.host_with_port
           return host_with_port
         end
 
+        return unless host
+
         String.build do |io|
           io << host
-          io << ":" << port unless [80, 443].includes?(port)
-        end.to_s
+          unless [80, 443].includes?(port)
+            io << ":" << port
+          end
+        end
       end
 
-      def port
-        uri.port
+      def port : Int32
+        uri.port || (ssl? ? 443 : 80)
       end
 
       @uri : URI?
@@ -104,9 +112,11 @@ module Salt
     end
 
     module Methods
+      NAMES = %w(GET HEAD PUT POST PATCH DELETE OPTIONS)
+
       delegate method, to: @request
 
-      {% for method in %w(GET HEAD PUT POST PATCH DELETE OPTIONS) %}
+      {% for method in NAMES %}
         # Checks the HTTP request method (or verb) to see if it was of type {{ method.id }}
         def {{ method.id.downcase }}?
           method == {{ method.id.stringify }}
@@ -114,7 +124,7 @@ module Salt
       {% end %}
     end
 
-    module Params
+    module Parameters
       delegate query_params, to: @request
 
       @params_parsed = false
@@ -122,29 +132,40 @@ module Salt
 
       def params
         return @params if @params_parsed && @request == @context.request
-
-        @params_parsed = true
-        if content_type = @request.headers["content_type"]?
-          @params = case content_type
-                    when .includes?("multipart/form-data")
-                      parse_multipart(@request)
-                    else
-                      parse_body(@request.body)
-                    end
-        end
-
-        @params
+        parse_params
       end
 
-      @files = {} of String => HTTP::FormData::Part
+      def form_data? : Bool
+        if content_type = @request.headers["content_type"]?
+          return content_type.starts_with?("multipart/form-data")
+        end
+
+        false
+      end
+
+      @files = {} of String => UploadFile
 
       # return files of Request body
       def files
         @files
       end
 
-      private def parse_body(body)
-        raws = case body
+      private def parse_params
+        @params = form_data? ? parse_multipart : parse_body
+
+        # Add query params
+        if !query_params.size.zero?
+          query_params.each do |key, value|
+            @params.add(key, value)
+          end
+        end
+
+        @params_parsed = true
+        @params
+      end
+
+      private def parse_body
+        raws = case body = @request.body
                when IO
                  body.gets_to_end
                when String
@@ -156,15 +177,15 @@ module Salt
         HTTP::Params.parse raws
       end
 
-      private def parse_multipart(request) : HTTP::Params
+      private def parse_multipart : HTTP::Params
         params = HTTP::Params.new
 
-        HTTP::FormData.parse(request) do |part|
+        HTTP::FormData.parse(@request) do |part|
           next unless part
 
           name = part.name
           if filename = part.filename
-            @files[name] = part
+            @files[name] = UploadFile.new(part)
           else
             params.add name, part.body.gets_to_end
           end
@@ -213,10 +234,31 @@ module Salt
         forward_missing_to @context.request.cookies
       end
     end
+    private struct UploadFile
+      getter filename : String
+      getter tempfile : Tempfile
+      getter size : UInt64?
+      getter created_at : Time?
+      getter modifed_at : Time?
+      getter headers : HTTP::Headers
+
+      def initialize(part : HTTP::FormData::Part)
+        @filename = part.filename.not_nil!
+        @size = part.size
+        @created_at = part.creation_time
+        @modifed_at = part.modification_time
+        @headers = part.headers
+
+        @tempfile = Tempfile.new(@filename)
+        ::File.open(@tempfile.path, "w") do |f|
+          IO.copy(part.body, f)
+        end
+      end
+    end
 
     include URL
     include Methods
-    include Params
+    include Parameters
     include Cookies
   end
 end

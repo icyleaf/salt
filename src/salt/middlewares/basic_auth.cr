@@ -129,7 +129,7 @@ module Salt
     end
   end
 
-  class Environment
+  struct Environment
     property auth_user : String?
   end
 end
