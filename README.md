@@ -86,18 +86,25 @@ Salt.run Talk.new
 
 All these components use the same interface, which is described in detail in the Salt::App specification. These optional components can be used in any way you wish.
 
-## Contributing
+## How to Contribute
 
-1. Fork it ( https://github.com/icyleaf/salt/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
+Your contributions are always welcome! Please submit a pull request or create an issue to add a new question, bug or feature to the list.
 
-## Contributors
+All [Contributors](https://github.com/icyleaf/salt/graphs/contributors) are on the wall.
 
-- [icyleaf](https://github.com/icyleaf) - creator, maintainer
+## You may also like
+
+- [halite](https://github.com/icyleaf/halite) - HTTP Requests Client with a chainable REST API, built-in sessions and loggers.
+- [totem](https://github.com/icyleaf/totem) - Load and parse a configuration file or string in JSON, YAML, dotenv formats.
+- [markd](https://github.com/icyleaf/markd) - Yet another markdown parser built for speed, Compliant to CommonMark specification.
+- [poncho](https://github.com/icyleaf/poncho) - A .env parser/loader improved for performance.
+- [popcorn](https://github.com/icyleaf/popcorn) - Easy and Safe casting from one type to another.
+- [fast-crystal](https://github.com/icyleaf/fast-crystal) - 💨 Writing Fast Crystal 😍 -- Collect Common Crystal idioms.
 
 ## Resouces
 
 Heavily inspired from Ruby's <a href="https://github.com/rack/rack">rack</a> gem.
+
+## License
+
+[MIT License](https://github.com/icyleaf/salt/blob/master/LICENSE) © icyleaf
