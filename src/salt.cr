@@ -33,10 +33,4 @@ module Salt
   def self.use(middleware, **options)
     Salt::Middlewares.use(middleware, **options)
   end
-
-  # Set alias of environment of server
-
-  {% for name in Server::Environment.constants %}
-    {{ name.id }} = Server::Environment::{{ name.id }}.value
-  {% end %}
 end
