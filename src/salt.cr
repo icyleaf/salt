@@ -1,5 +1,4 @@
 require "./salt/*"
-require "./salt/ext/*"
 
 module Salt
   # Run http server and takes an argument that is an Salt::App that responds to #call
