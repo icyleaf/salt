@@ -1,6 +1,5 @@
 require "./middlewares/session/abstract/session_hash"
 require "uri"
-require "tempfile"
 
 module Salt
   # `Salt::Environment` provides a convenient interface to a Salt environment.
@@ -236,7 +235,7 @@ module Salt
     end
     private struct UploadFile
       getter filename : String
-      getter tempfile : Tempfile
+      getter tempfile : File
       getter size : UInt64?
       getter created_at : Time?
       getter modifed_at : Time?
@@ -249,7 +248,7 @@ module Salt
         @modifed_at = part.modification_time
         @headers = part.headers
 
-        @tempfile = Tempfile.new(@filename)
+        @tempfile = File.tempfile(@filename)
         ::File.open(@tempfile.path, "w") do |f|
           IO.copy(part.body, f)
         end
