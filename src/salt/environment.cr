@@ -235,7 +235,7 @@ module Salt
     end
     private struct UploadFile
       getter filename : String
-      getter tempfile : File
+      getter tempfile : ::File
       getter size : UInt64?
       getter created_at : Time?
       getter modifed_at : Time?
@@ -248,7 +248,7 @@ module Salt
         @modifed_at = part.modification_time
         @headers = part.headers
 
-        @tempfile = File.tempfile(@filename)
+        @tempfile = ::File.tempfile(@filename)
         ::File.open(@tempfile.path, "w") do |f|
           IO.copy(part.body, f)
         end
