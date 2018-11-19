@@ -41,7 +41,7 @@ module Salt
           elapsed_from(began_at),
           colorful_method(env.method),
           env.path,
-          env.query ? "?#{env.query}" : "",
+          env.query.to_s.empty? ? "" : "?#{env.query}",
         ]
       end
 
